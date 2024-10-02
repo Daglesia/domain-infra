@@ -16,13 +16,3 @@ spec:
                 name: forgejo-service
                 port:
                   number: 3000
-    - host: n8n.localhost
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: n8n-service
-                port:
-                  number: 5678
