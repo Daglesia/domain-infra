@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: argocd
+spec:
+  destination:
+    namespace: ingress-nginx
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: ingress-nginx
+    helm:
+      values: |-
+        controller:
+          config:
+            use-proxy-protocol: "true"
+          service:
+            ports:
+              http: 81
+              https: 444
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: HEAD
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+

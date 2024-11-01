@@ -1,0 +1,1 @@
+helm install --set namespaceOverride="argocd" argo argo/argo-cd
