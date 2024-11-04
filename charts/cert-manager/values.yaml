@@ -1,0 +1,8 @@
+cert-manager:
+  cluster-issuer:
+    name: letsencrypt-issuer
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: ""
+    key: letsencrypt-issuer-key
+  crds:
+    enabled: true
