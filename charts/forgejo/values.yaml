@@ -14,6 +14,3 @@ forgejo:
      - secretName: forgejo-tls
        hosts:
          - git.daglesia.com
-    # Mostly for argocd or any other CI that uses `helm template | kubectl apply` or similar
-    # If helm doesn't correctly detect your ingress API version you can set it here.
-    # apiVersion: networking.k8s.io/v1

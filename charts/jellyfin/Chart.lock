@@ -1,0 +1,6 @@
+dependencies:
+- name: jellyfin
+  repository: https://jellyfin.github.io/jellyfin-helm
+  version: 2.1.0
+digest: sha256:600517cc24ae38be1691fa39d8e50d15f4bb5f9eaf5608d9e5132d6722bb5d57
+generated: "2024-11-20T20:26:35.014842912+01:00"
