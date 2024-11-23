@@ -1,6 +1,6 @@
 nextcloud:
   nextcloud:
-    host: nextcloud.daglesia.com
+    host: cloud.daglesia.com
   ingress:
     enabled: true
     className: nginx
@@ -8,11 +8,11 @@ nextcloud:
       cert-manager.io/cluster-issuer: letsencrypt-issuer
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     hosts:
-      - host: nextcloud.daglesia.com
+      - host: cloud.daglesia.com
         paths:
           - path: /
             pathType: Prefix
     tls:
      - secretName: nextcloud-tls
        hosts:
-         - nextcloud.daglesia.com
+         - cloud.daglesia.com
