@@ -2,15 +2,8 @@ jellyfin:
   ingress:
     enabled: true
     className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-issuer
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     hosts:
       - host: media.daglesia.com
         paths:
           - path: /
             pathType: Prefix
-    tls:
-     - secretName: jellyfin-tls
-       hosts:
-         - media.daglesia.com
