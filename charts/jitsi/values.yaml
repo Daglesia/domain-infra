@@ -1,6 +1,7 @@
 jitsi:
   jvb:
-    useHostNetwork: true
+    useHostPort: true
+    useNodeIP: true
   web:
     ingress:
       enabled: true
