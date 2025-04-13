@@ -1,0 +1,20 @@
+authentik:
+    secret_key: "PleaseGenerateASecureKey"
+    error_reporting:
+        enabled: false
+    postgresql:
+        password: "ThisIsNotASecurePassword"
+
+server:
+    ingress:
+        ingressClassName: nginx
+        enabled: true
+        hosts:
+            - authentik.domain.tld
+
+postgresql:
+    enabled: true
+    auth:
+        password: "ThisIsNotASecurePassword"
+redis:
+    enabled: true
