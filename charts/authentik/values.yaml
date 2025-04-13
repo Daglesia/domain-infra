@@ -10,7 +10,7 @@ server:
         ingressClassName: nginx
         enabled: true
         hosts:
-            - authentik.domain.tld
+            - auth.daglesia.com
 
 postgresql:
     enabled: true
