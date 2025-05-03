@@ -1,0 +1,16 @@
+longhorn:
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-issuer
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: cloud.daglesia.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+     - secretName: longhorn-tls
+       hosts:
+         - cloud.daglesia.com
