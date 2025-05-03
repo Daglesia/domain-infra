@@ -2,7 +2,7 @@ certManager:
   clusterIssuer:
     name: letsencrypt-issuer
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: ""
+    email: "magdalena@daglesia.com"
     key: letsencrypt-issuer-key
   crds:
     enabled: true
