@@ -14,7 +14,9 @@ spec:
         - values.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: cert-manager
   syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
     automated:
       prune: true
