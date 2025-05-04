@@ -14,7 +14,3 @@ jellyfin:
      - secretName: jellyfin-tls
        hosts:
          - media.daglesia.com
-  persistence:
-    media:
-      type: hostPath
-      hostPath: /media
