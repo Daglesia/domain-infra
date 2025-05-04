@@ -4,5 +4,3 @@ certManager:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: "magdalena@daglesia.com"
     key: letsencrypt-issuer-key
-  crds:
-    enabled: true
