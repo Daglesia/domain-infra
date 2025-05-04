@@ -7,3 +7,7 @@ jellyfin:
         paths:
           - path: /
             pathType: Prefix
+  persistence:
+    media:
+      type: hostPath
+      hostPath: /media
