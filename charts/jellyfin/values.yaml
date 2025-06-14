@@ -1,8 +1,8 @@
 jellyfin:
-  persistence:
-    media:
-      size: 15Gi
-      existingClaim: local-pvc
+  # persistence:
+  #   media:
+  #     size: 15Gi
+  #     existingClaim: local-pvc
   ingress:
     enabled: true
     className: nginx
