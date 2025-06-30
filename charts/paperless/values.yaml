@@ -1,0 +1,16 @@
+paperless-ngx:
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-issuer
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: docs.daglesia.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+     - secretName: paperless-tls
+       hosts:
+         - docs.daglesia.com
