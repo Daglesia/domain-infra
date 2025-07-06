@@ -1,4 +1,6 @@
-paperless-ngx:
+joplin:
+  env:
+    APP_BASE_URL: https://docs.daglesia.com
   ingress:
     enabled: true
     className: nginx
@@ -11,6 +13,6 @@ paperless-ngx:
           - path: /
             pathType: Prefix
     tls:
-     - secretName: paperless-tls
+     - secretName: joplin-tls
        hosts:
          - docs.daglesia.com

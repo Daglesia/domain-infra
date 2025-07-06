@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: paperless
+  name: joplin
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/Daglesia/domain-infra
-    path: charts/paperless
+    path: charts/joplin
     targetRevision: HEAD
     helm:
       valueFiles:
