@@ -2,17 +2,18 @@ joplin:
   env:
     APP_BASE_URL: https://docs.daglesia.com
   ingress:
-    enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-issuer
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    hosts:
-      - host: docs.daglesia.com
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-     - secretName: joplin-tls
-       hosts:
-         - docs.daglesia.com
+    main:
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-issuer
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      hosts:
+        - host: docs.daglesia.com
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+      - secretName: joplin-tls
+        hosts:
+          - docs.daglesia.com
