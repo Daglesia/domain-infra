@@ -1,6 +1,0 @@
-dependencies:
-- name: joplin-server
-  repository: https://k8s-at-home.com/charts/
-  version: 5.3.2
-digest: sha256:b61f36ab4bc6a3ddbd0d7027aee7d06e698d4ff12fa58859c12aacce715dea71
-generated: "2025-07-07T00:25:55.79282433+02:00"
