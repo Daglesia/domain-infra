@@ -1,6 +1,6 @@
 constants:
   storage: &storageSize 25Gi
-  pvc: &pvcName "jellyfin-media-pvc"
+  pvc: &pvcName "local-pvc"
   pv: &pvName "jellyfin-media-pv"
   node_affinity_config:
     node_limit: &node_affinity 
