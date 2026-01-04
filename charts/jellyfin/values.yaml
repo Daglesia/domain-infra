@@ -1,8 +1,20 @@
+constants:
+  storage: &storageSize 25Gi
+  pvc: &pvcName "jellyfin-media-pvc"
+  pv: &pvName "jellyfin-media-pv"
+  node_affinity_config:
+    node_limit: &node_affinity 
+      matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - raspberka-ekran
+
 jellyfin:
   persistence:
     media:
-      size: 25Gi
-      hostPath: "/media"
+      size: *storageSize
+      existingClaim: *pvcName
   ingress:
     enabled: true
     className: nginx
@@ -18,3 +30,8 @@ jellyfin:
      - secretName: jellyfin-tls
        hosts:
          - notflix.daglesia.com
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - *node_affinity
