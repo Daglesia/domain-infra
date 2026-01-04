@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "jellyfin.pvcName" . }}
+  name: jellyfin-media-pvc
 spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: local-storage
   resources:
     requests:
-      storage: {{ include "jellyfin.storageSize" . }}
+      storage: 25Gi

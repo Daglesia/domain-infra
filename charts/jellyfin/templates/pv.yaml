@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ include "jellyfin.pvName" . }}
+  name: jellyfin-media-pv
 spec:
   capacity:
-    storage: {{ include "jellyfin.storageSize" . }}
+    storage: 25Gi
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
@@ -14,4 +14,8 @@ spec:
   nodeAffinity:
     required:
       nodeSelectorTerms:
-        {{- include "jellyfin.nodeSelectorTermsConfig" . | indent 8 }}
+        matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+              - raspberka-ekran
