@@ -1,9 +1,9 @@
 constants:
-  storage: &storageSize 25Gi
-  pvc: &pvcName "local-pvc"
-  pv: &pvName "jellyfin-media-pv"
+  storage: "25Gi"
+  pvc: "jellyfin-media-pvc"
+  pv: "jellyfin-media-pv"
   node_affinity_config:
-    node_limit: &node_affinity 
+    node_limit: 
       matchExpressions:
         - key: kubernetes.io/hostname
           operator: In
@@ -13,8 +13,8 @@ constants:
 jellyfin:
   persistence:
     media:
-      size: *storageSize
-      existingClaim: *pvcName
+      size: "25Gi"
+      existingClaim: "jellyfin-media-pvc"
   ingress:
     enabled: true
     className: nginx
@@ -34,4 +34,8 @@ jellyfin:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
-          - *node_affinity
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - raspberka-ekran
