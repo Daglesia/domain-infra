@@ -1,8 +1,8 @@
 jellyfin:
   persistence:
     media:
-      size: 15Gi
-      existingClaim: local-pvc
+      size: 25Gi
+      hostPath: "/media"
   ingress:
     enabled: true
     className: nginx
