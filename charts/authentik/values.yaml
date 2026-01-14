@@ -1,0 +1,41 @@
+authentik:
+    secret_key: ENC[AES256_GCM,data:JaZ66wAXmEP2Xt2xg0mYFTqL6kIhtNNyXTK5d/I1FfHVTCoXB5fCsIUZ56+vPqMe8sE=,iv:frDoTzwuit5bc43Kaj5rIsSWJawEK2QHf/GuLKVofSs=,tag:VP41ioZ0h/ub+yTGHInP5g==,type:str]
+    error_reporting:
+        enabled: false
+    postgresql:
+        password: ENC[AES256_GCM,data:KS0X965uatCN3cOtqUgDRZfNqCBkg6TP5FYiLkKW8QvTXh0koX3aJioRhP0uqadNXfo=,iv:mKC8IkewUsX5jkEpwwReLoJURUftNnXzAc/7sai5X2g=,tag:Tbb+dA6TD8MVMr0WwhD31g==,type:str]
+server:
+    ingress:
+        enabled: true
+        className: nginx
+        annotations:
+            cert-manager.io/cluster-issuer: letsencrypt-issuer
+            nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        hosts:
+            - host: auth.daglesia.com
+              paths:
+                - path: /
+                  pathType: Prefix
+        tls:
+            - secretName: authentik-tls
+              hosts:
+                - auth.daglesia.com
+postgresql:
+    enabled: true
+    auth:
+        password: ENC[AES256_GCM,data:2t5h9E1gt/1feRoX0KYHQ84P0IA2Sr3f+BBYgeHaChVdkj4pgyeeavr53yZTqQnxwj4=,iv:aYf59Xs8F6THp9eM3FEkKvDa5ns+cu5afwWnUrB4K8Q=,tag:H4HEc10KUecKzwDnaROOQQ==,type:str]
+sops:
+    age:
+        - recipient: age14x7jgxf0t2dfmquw6cenec5c7lqryzcvd0cxv85xlwtzafdcr9eql0vmm3
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBjamc1WHN1MTZpYURhV0F5
+            R0Q5MStTN1B0WTg2bmFCazl0SGVMVEpjQ2xNCi9pdFV3d296WGpHNHZjY3hoR0Va
+            djhZQ2pST2FxTVFXRnh3NXV3bHJrTE0KLS0tIHdWVUl4T3Q4a1dWVWdWbmJHaHZs
+            a284RW1MRXZIeVNZVjJDOVJtK1RKbVkK2aTaEjZMh90SvcglnAseLQDjqBs7FyUd
+            tacjqbEE4vf5r1JCzD2NMFc3qPEeubQ7Tq3XJl0zKjtKsd50CoLqiw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-01-14T12:19:26Z"
+    mac: ENC[AES256_GCM,data:hBqVJMTh9atoXc/GQHYPINgQocgUL+s49L3z47/91CE8Y/cROS1UsWqo/1mP94Q/WCpUCYCc536R93Z7EmhxwapfBn/bDpqlBoBpscDihK61e7llhVuU0iXaLk2JS56uSd9HWnc0TOVBACsnXu4XGz3ngRaQL545Bk9N1TZuESI=,iv:No/O7401VipZptdg+rlGHhYrHmg7VCv4kLKejwSkgx0=,tag:F/cUd9UJDenAah1dzIWVlw==,type:str]
+    encrypted_regex: ^(data|stringData|secrets|secret|password|secret_key)$
+    version: 3.11.0
