@@ -1,0 +1,4 @@
+creation_rules:
+  - path_regex: values.yaml
+    encrypted_regex: "^(data|stringData|secrets)$"
+    age: example-secret
