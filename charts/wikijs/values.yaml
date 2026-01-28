@@ -10,7 +10,7 @@ constants:
           values:
             - raspberka-ekran
 
-wikijs:
+wiki:
   ingress:
     enabled: true
     className: nginx
@@ -35,9 +35,8 @@ wikijs:
               operator: In
               values:
                 - raspberka-ekran
-
-postgresql:
-  persistence:
-    enabled: "true"
-    size: "10Gi"
-    existingClaim: "wikijs-docs-pvc"
+  postgresql:
+    persistence:
+      enabled: "true"
+      size: "10Gi"
+      existingClaim: "wikijs-docs-pvc"
