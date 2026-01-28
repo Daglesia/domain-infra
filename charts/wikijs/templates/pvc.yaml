@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.constants.pvc }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.constants.storage }}
+  volumeName: {{ .Values.constants.pv }}
+  storageClassName: local-docs-storage

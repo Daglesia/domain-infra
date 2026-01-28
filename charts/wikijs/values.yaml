@@ -1,0 +1,43 @@
+constants:
+  storage: "10Gi"
+  pvc: "wikijs-docs-pvc"
+  pv: "wikijs-docs-pv"
+  node_affinity_config:
+    node_limit: 
+      matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - raspberka-ekran
+
+wikijs:
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-issuer
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: docs.daglesia.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+     - secretName: wikijs-tls
+       hosts:
+         - docs.daglesia.com
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - raspberka-ekran
+
+postgresql:
+  persistence:
+    enabled: "true"
+    size: "10Gi"
+    existingClaim: "wikijs-docs-pvc"
