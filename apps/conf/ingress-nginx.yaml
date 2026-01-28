@@ -9,19 +9,6 @@ spec:
     repoURL: https://kubernetes.github.io/ingress-nginx
     chart: ingress-nginx
     targetRevision: 4.11.3
-    helm:
-      values: |-
-        controller:
-          config:
-            use-proxy-protocol: "true"
-          service:
-            ports:
-              http: 81
-              https: 444
-            internal:
-              ports:
-                http: 80
-                https: 443
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
