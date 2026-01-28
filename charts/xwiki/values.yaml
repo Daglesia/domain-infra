@@ -11,6 +11,10 @@ constants:
             - raspberka-ekran
 
 xwiki:
+  mysql:
+    image:
+      repository: bitnamilegacy/mysql
+      tag: "8.4.4-debian-12-r7"
   appUrl: "https://docs.daglesia.com"
   ingress:
     enabled: true
