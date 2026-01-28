@@ -1,0 +1,8 @@
+apiVersion: v2
+name: docmost
+type: application
+version: 0.1.0
+dependencies:
+  - name: docmost
+    repository: https://thelande.github.io/charts/
+    version: ~0.5.2

@@ -1,7 +1,7 @@
 constants:
   storage: "10Gi"
-  pvc: "wikijs-docs-pvc"
-  pv: "wikijs-docs-pv"
+  pvc: "docmost-docs-pvc"
+  pv: "docmost-docs-pv"
   node_affinity_config:
     node_limit: 
       matchExpressions:
@@ -10,7 +10,7 @@ constants:
           values:
             - raspberka-ekran
 
-wiki:
+docmost:
   ingress:
     enabled: true
     className: nginx
@@ -23,7 +23,7 @@ wiki:
           - path: /
             pathType: Prefix
     tls:
-     - secretName: wikijs-tls
+     - secretName: docmost-tls
        hosts:
          - docs.daglesia.com
   affinity:
@@ -35,8 +35,7 @@ wiki:
               operator: In
               values:
                 - raspberka-ekran
-  postgresql:
-    persistence:
-      enabled: "true"
-      size: "10Gi"
-      existingClaim: "wikijs-docs-pvc"
+  persistence:
+    enabled: "true"
+    size: "10Gi"
+    existingClaim: "docmost-docs-pvc"

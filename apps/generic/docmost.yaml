@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: wikijs
+  name: docmost
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/Daglesia/domain-infra
-    path: charts/wikijs
+    path: charts/docmost
     targetRevision: HEAD
     helm:
       valueFiles:
