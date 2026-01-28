@@ -11,6 +11,8 @@ constants:
             - raspberka-ekran
 
 docmost:
+  config:
+      appUrl: "https://docs.daglesia.com"
   ingress:
     enabled: true
     className: nginx
@@ -36,6 +38,6 @@ docmost:
               values:
                 - raspberka-ekran
   persistence:
-    enabled: "true"
+    enabled: true
     size: "10Gi"
     existingClaim: "docmost-docs-pvc"
