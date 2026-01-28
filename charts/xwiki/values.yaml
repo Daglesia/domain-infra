@@ -1,7 +1,7 @@
 constants:
   storage: "10Gi"
-  pvc: "docmost-docs-pvc"
-  pv: "docmost-docs-pv"
+  pvc: "xwiki-docs-pvc"
+  pv: "xwiki-docs-pv"
   node_affinity_config:
     node_limit: 
       matchExpressions:
@@ -10,7 +10,7 @@ constants:
           values:
             - raspberka-ekran
 
-docmost:
+xwiki:
   appUrl: "https://docs.daglesia.com"
   ingress:
     enabled: true
@@ -24,7 +24,7 @@ docmost:
           - path: /
             pathType: Prefix
     tls:
-     - secretName: docmost-tls
+     - secretName: xwiki-tls
        hosts:
          - docs.daglesia.com
   affinity:
@@ -39,4 +39,4 @@ docmost:
   persistence:
     enabled: true
     size: "10Gi"
-    existingClaim: "docmost-docs-pvc"
+    existingClaim: "xwiki-docs-pvc"

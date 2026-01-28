@@ -1,6 +1,0 @@
-dependencies:
-- name: docmost
-  repository: https://thelande.github.io/charts/
-  version: 0.5.2
-digest: sha256:65ac6549ac9fe4c69b8e69c8b3c3529c4ab7f0c87e18ecd52479bdd947554868
-generated: "2026-01-28T22:46:34.03394468+01:00"

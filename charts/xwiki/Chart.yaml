@@ -1,0 +1,8 @@
+apiVersion: v2
+name: xwiki
+type: application
+version: 0.1.0
+dependencies:
+  - name: xwiki
+    repository: https://xwiki-contrib.github.io/xwiki-helm
+    version: ~1.6.5
