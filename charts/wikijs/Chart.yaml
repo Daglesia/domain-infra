@@ -1,8 +1,8 @@
 apiVersion: v2
-name: xwiki
+name: wikijs
 type: application
 version: 0.1.0
 dependencies:
-  - name: xwiki
-    repository: https://xwiki-contrib.github.io/xwiki-helm
-    version: ~1.6.5
+  - name: wiki
+    repository: https://charts.js.wiki
+    version: ~2.2.0

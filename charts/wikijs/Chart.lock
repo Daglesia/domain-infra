@@ -1,6 +1,6 @@
 dependencies:
-- name: xwiki
-  repository: https://xwiki-contrib.github.io/xwiki-helm
-  version: 1.6.5
-digest: sha256:8c9564e698df5223180b42d77123e2b72f56dc655dac08e825b1f4d6f841b352
-generated: "2026-01-29T10:20:39.953169149+01:00"
+- name: wiki
+  repository: https://charts.js.wiki
+  version: 2.2.24
+digest: sha256:ea66e3659980b25bafaaaaa3db3d647b86bc5b9e16198b70ad7bd34694c4b28b
+generated: "2026-01-29T10:45:48.504292759+01:00"
