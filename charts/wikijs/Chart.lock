@@ -3,4 +3,4 @@ dependencies:
   repository: https://xwiki-contrib.github.io/xwiki-helm
   version: 1.6.5
 digest: sha256:8c9564e698df5223180b42d77123e2b72f56dc655dac08e825b1f4d6f841b352
-generated: "2026-01-28T23:33:50.491270232+01:00"
+generated: "2026-01-29T10:20:39.953169149+01:00"

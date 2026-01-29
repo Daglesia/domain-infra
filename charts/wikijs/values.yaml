@@ -1,0 +1,77 @@
+constants:
+  storage: "10Gi"
+  pvc: "wiki-docs-pvc"
+  pv: "wiki-docs-pv"
+  node_affinity_config:
+    node_limit: 
+      matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - raspberka-ekran
+
+wikijs:
+  image:
+    repository: requarks/wiki
+    tag: 2.5
+    pullPolicy: IfNotPresent
+  config:
+    publicUrl: https://docs.daglesia.com
+    dbType: postgres
+  postgresql:
+    enabled: true
+    image:
+      repository: bitnami/postgresql
+      tag: 15.5.0-debian-11-r10
+    auth:
+      database: wikijs
+      username: wikijs
+      password: "choose-a-secure-password"
+    primary:
+      persistence:
+        enabled: true
+        size: 8Gi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - raspberka-ekran
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-issuer
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: docs.daglesia.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: wikijs-tls
+        hosts:
+          - docs.daglesia.com
+  persistence:
+    enabled: true
+    size: "10Gi"
+    existingClaim: "wiki-docs-pvc"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                  - raspberka-ekran
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"

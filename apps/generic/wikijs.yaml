@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: xwiki
+  name: wikijs
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/Daglesia/domain-infra
-    path: charts/xwiki
+    path: charts/wikijs
     targetRevision: HEAD
     helm:
       valueFiles:
