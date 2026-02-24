@@ -1,0 +1,4 @@
+creation_rules:
+  - age: >-
+      age14x7jgxf0t2dfmquw6cenec5c7lqryzcvd0cxv85xlwtzafdcr9eql0vmm3
+    encrypted_regex: "^(secrets|.*)$"
