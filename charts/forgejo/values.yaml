@@ -1,9 +1,15 @@
 forgejo:
   gitea:
     admin:
-      username: secret-forgejo-username
-      password: secret-forgejo-password
-      email: secret-forgejo-email
+      username: 
+        secret: forgejo-username
+        key: username
+      password:
+        secret: forgejo-password
+        key: password
+      email:
+        secret: forgejo-email
+        key: email
   ingress:
     enabled: true
     className: nginx
