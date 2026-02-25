@@ -1,7 +1,4 @@
 forgejo:
-  gitea:
-    admin:
-      existingSecret: forgejo-admin
   ingress:
     enabled: true
     className: nginx
