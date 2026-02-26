@@ -1,22 +1,11 @@
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
-  annotations:
-    helmcharts.cattle.io/managed-by: helm-controller
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"helm.cattle.io/v1","kind":"HelmChart","metadata":{"annotations":{},"name":"argocd","namespace":"kube-system"},"spec":{"chart":"argo-cd","createNamespace":true,"repo":"https://argoproj.github.io/argo-helm","targetNamespace":"argocd","version":"v9.4.4"}}
-  creationTimestamp: "2026-02-23T19:57:05Z"
-  finalizers:
-  - wrangler.cattle.io/on-helm-chart-remove
-  generation: 7
   name: argocd
   namespace: kube-system
-  resourceVersion: "2726929"
-  uid: ff359a45-0faa-4569-add0-3826be10ba66
 spec:
   chart: argo-cd
   createNamespace: true
-  failurePolicy: reinstall
   repo: https://argoproj.github.io/argo-helm
   targetNamespace: argocd
   valuesContent: |-
@@ -25,7 +14,6 @@ spec:
       - name: SOPS_AGE_KEY_FILE
         value: /etc/sops/age.key
       image:
-        # helm-secret and helm-git support
         repository: ghcr.io/juniorjpdj/argocd-helm-secrets
       volumeMounts:
         - name: argocd-age-key
@@ -45,12 +33,3 @@ spec:
           secrets,secrets+literal,
           https
   version: v9.4.4
-status:
-  conditions:
-  - message: Applying HelmChart using Job kube-system/helm-install-argocd
-    reason: Job created
-    status: "True"
-    type: JobCreated
-  - status: "False"
-    type: Failed
-  jobName: helm-install-argocd
