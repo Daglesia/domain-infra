@@ -10,7 +10,7 @@ constants:
           values:
             - raspberka-ekran
 
-wikijs:
+wiki:
   image:
     repository: requarks/wiki
     tag: 2.5
