@@ -1,21 +1,21 @@
 authentik:
   authentik:
-    secret_key: "CHANGE_ME_TO_A_LONG_RANDOM_STRING"
+    secret_key: "GENERATE_A_REAL_KEY_HERE" 
     error_reporting:
       enabled: false
   server:
     ingress:
       enabled: true
-      ingressClassName: nginx
+      ingressClassName: "nginx"
       hosts:
-        - host: auth.daglesia.com
-          paths:
-            - path: /
-              pathType: Prefix
+        - "auth.daglesia.com"
+      paths:
+        - "/"
+      pathType: Prefix
       tls:
         - secretName: authentik-tls-cert
           hosts:
-            - auth.daglesia.com
+            - "auth.daglesia.com" 
     resources:
       requests:
         cpu: 100m
