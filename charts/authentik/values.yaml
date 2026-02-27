@@ -1,23 +1,22 @@
 authentik:
-  error_reporting:
-    enabled: false
-
-postgresql:
-  enabled: true
-
-server:
-  ingress:
+  authentik:
+    error_reporting:
+      enabled: false
+  postgresql:
     enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-issuer
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    hosts:
-      - host: auth.daglesia.com
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
+  server:
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-issuer
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      hosts:
+        - host: auth.daglesia.com
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
       - secretName: authentik-tls
         hosts:
           - auth.daglesia.com
