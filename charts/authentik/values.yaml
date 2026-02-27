@@ -12,10 +12,7 @@ authentik:
         cert-manager.io/cluster-issuer: letsencrypt-issuer
         nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       hosts:
-        - host: auth.daglesia.com
-          paths:
-            - path: /
-              pathType: Prefix
+        - auth.daglesia.com
       tls:
       - secretName: authentik-tls
         hosts:
