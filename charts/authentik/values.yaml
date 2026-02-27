@@ -3,34 +3,34 @@ authentik:
     secret_key: "CHANGE_ME_TO_A_LONG_RANDOM_STRING"
     error_reporting:
       enabled: false
-  postgresql:
-    enabled: true
-    auth:
-      database: authentik
-      username: authentik
-      password: "an-actual-secure-password"
-    persistence:
-      enabled: true
-      size: 8Gi
-  redis:
-    enabled: true
-    architecture: standalone
-  ingress:
-    enabled: true
-    ingressClassName: nginx
-    hosts:
-      - host: auth.daglesia.com
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: authentik-tls-cert
-        hosts:
-          - auth.daglesia.com
   server:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hosts:
+        - host: auth.daglesia.com
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - secretName: authentik-tls-cert
+          hosts:
+            - auth.daglesia.com
     resources:
       requests:
         cpu: 100m
         memory: 512Mi
       limits:
         memory: 2Gi
+  postgresql:
+    enabled: true
+    auth:
+      database: authentik
+      username: authentik
+      password: "use-a-secure-password-here"
+    persistence:
+      enabled: true
+      size: 8Gi
+  redis:
+    enabled: true
+    architecture: standalone
