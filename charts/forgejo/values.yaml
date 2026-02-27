@@ -1,4 +1,22 @@
+constants:
+  storage: "25Gi"
+  pvc: "forgejo-git-pvc"
+  pv: "forgejo-git-pv"
+  node_affinity_config:
+    node_limit: 
+      matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - raspberka-ekran
+
 forgejo:
+  persistence:
+    enabled: true
+    create: false
+    claimName: forgejo-git-pvc
+    volumeName: forgejo-git-pv
+    storageClass: local-git-storage
   ingress:
     enabled: true
     className: nginx
