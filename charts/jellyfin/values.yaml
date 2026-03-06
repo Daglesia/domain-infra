@@ -1,5 +1,5 @@
 constants:
-  storage: "25Gi"
+  storage: "200Gi"
   pvc: "jellyfin-media-pvc"
   pv: "jellyfin-media-pv"
   node_affinity_config:
@@ -8,12 +8,12 @@ constants:
         - key: kubernetes.io/hostname
           operator: In
           values:
-            - raspberka-ekran
+            - dag-mini-pc
 
 jellyfin:
   persistence:
     media:
-      size: "25Gi"
+      size: "200Gi"
       existingClaim: "jellyfin-media-pvc"
   ingress:
     enabled: true
@@ -38,4 +38,4 @@ jellyfin:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - raspberka-ekran
+                - dag-mini-pc
