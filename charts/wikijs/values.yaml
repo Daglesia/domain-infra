@@ -12,21 +12,27 @@ constants:
 
 wiki:
   postgresql:
-    enabled: false
-    postgresqlHost: wikijs-postgres
-    postgresqlPort: 5432
-    postgresqlDatabase: wiki
-    postgresqlUsername: wiki
-    postgresqlPassword: changeme
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                  - dag-mini-pc
+    enabled: true
+    image:
+      repository: bitnami/postgresql
+      tag: "16"
+    auth:
+      database: wikijs
+      username: wikijs
+      password: "choose-a-secure-password"
+    primary:
+      persistence:
+        enabled: true
+        size: 8Gi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - raspberka-ekran
   ingress:
     enabled: true
     className: nginx
