@@ -14,9 +14,9 @@ wiki:
   postgresql:
     enabled: true
     image:
-      registry: docker.io
+      registry: public.ecr.aws
       repository: bitnami/postgresql
-      tag: "15.6.0"
+      tag: "15"
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
