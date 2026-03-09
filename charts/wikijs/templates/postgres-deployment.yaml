@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wikijs-postgres
+  namespace: wikijs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wikijs-postgres
+  template:
+    metadata:
+      labels:
+        app: wikijs-postgres
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - dag-mini-pc
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          env:
+            - name: POSTGRES_DB
+              value: wiki
+            - name: POSTGRES_USER
+              value: wiki
+            - name: POSTGRES_PASSWORD
+              value: changeme
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: wiki-docs-pvc

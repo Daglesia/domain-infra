@@ -12,11 +12,12 @@ constants:
 
 wiki:
   postgresql:
-    enabled: true
-    image:
-      registry: public.ecr.aws
-      repository: bitnami/postgresql
-      tag: "15"
+    enabled: false
+    postgresqlHost: wikijs-postgres
+    postgresqlPort: 5432
+    postgresqlDatabase: wiki
+    postgresqlUsername: wiki
+    postgresqlPassword: changeme
   affinity:
     nodeAffinity:
       requiredDuringSchedulingIgnoredDuringExecution:
