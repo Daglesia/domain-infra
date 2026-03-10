@@ -1,0 +1,56 @@
+constants:
+  storage: "20Gi"
+  pvc: "penpot-assets-pvc"
+  pv: "penpot-assets-pv"
+  storageClass: "penpot-assets-sc"
+  node_affinity_config:
+    node_limit:
+      matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - dag-mini-pc
+
+penpot:
+  persistence:
+    assets:
+      enabled: true
+      size: "20Gi"
+      existingClaim: "penpot-assets-pvc"
+
+  config:
+    publicUri: "https://design.daglesia.com"
+    flags: "enable-login disable-demo-users disable-demo-warning"
+    telemetryEnabled: false
+    postgresql:
+      database: "penpot"
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-issuer
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: design.daglesia.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: penpot-tls
+        hosts:
+          - design.daglesia.com
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - dag-mini-pc
+
+  postgresql:
+    auth:
+      database: "penpot"
