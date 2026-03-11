@@ -24,7 +24,7 @@ penpot:
 
   config:
     publicUri: "https://design.daglesia.com"
-    flags: "enable-login disable-demo-users disable-demo-warning"
+    flags: "enable-login enable-prepl-server disable-registration"
     telemetryEnabled: false
     postgresql:
       database: "penpot"
