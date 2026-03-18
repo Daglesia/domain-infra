@@ -11,6 +11,14 @@ constants:
             - raspberka-ekran
 
 forgejo:
+  gitea:
+    config:
+      server:
+        LFS_START_SERVER: true
+        LFS_HTTP_AUTH_EXPIRY: 30m
+        LFS_MAX_FILE_SIZE: 0
+      lfs:
+        PATH: /git/lfs
   persistence:
     enabled: true
     create: false
