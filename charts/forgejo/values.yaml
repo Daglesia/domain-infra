@@ -18,7 +18,7 @@ forgejo:
         LFS_HTTP_AUTH_EXPIRY: 30m
         LFS_MAX_FILE_SIZE: 0
       lfs:
-        PATH: /git/lfs
+        PATH: /data/lfs
   persistence:
     enabled: true
     create: false
@@ -31,6 +31,7 @@ forgejo:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-issuer
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "500m"
     hosts:
       - host: git.daglesia.com
         paths:
