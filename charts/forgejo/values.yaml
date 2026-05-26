@@ -11,6 +11,16 @@ constants:
             - raspberka-ekran
 
 forgejo:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                  - raspberka-ekran
+
   gitea:
     config:
       server:
@@ -19,12 +29,16 @@ forgejo:
         LFS_MAX_FILE_SIZE: 0
       lfs:
         PATH: /data/lfs
+      actions:
+        ENABLED: true
+
   persistence:
     enabled: true
     create: false
     claimName: forgejo-git-pvc
     volumeName: forgejo-git-pv
     storageClass: local-git-storage
+
   ingress:
     enabled: true
     className: nginx
@@ -38,6 +52,75 @@ forgejo:
           - path: /
             pathType: Prefix
     tls:
-     - secretName: forgejo-tls
-       hosts:
-         - git.daglesia.com
+      - secretName: forgejo-tls
+        hosts:
+          - git.daglesia.com
+
+  actions:
+    enabled: true
+    existingSecret: ""
+    existingSecretKey: "token"
+    token: ""
+
+    provisioning:
+      enabled: true     # Automatically register the runner on first install
+
+    statefulset:
+      enabled: true
+      replicaCount: 1   # Keep at 1 to match your single Pi hardware node
+
+      image:
+        repository: code.forgejo.org/forgejo/runner
+        tag: ""         # defaults to the version the chart was tested against
+        pullPolicy: IfNotPresent
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 1000m     # Allowed to cap up to 1 full core during busy steps
+          memory: 1024Mi # Cap memory to prevent OOMing the whole Pi
+
+      # Pins the runner pod to the same Pi node
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - raspberka-ekran
+
+      nodeSelector: {}
+      tolerations: []
+
+      # Runner container configuration
+      config:
+        # Core configuration mapping standard labels to 64-bit ARM compatible environments
+        labels:
+          - "ubuntu-latest:docker://node:20-bookworm"
+          - "ubuntu-22.04:docker://node:20-bookworm"
+          - "ubuntu-20.04:docker://node:20-focal"
+
+        # Disabled DinD to save RAM and avoid storage driver overhead on Pi OS
+        dind:
+          enabled: false
+
+        # Storage for the runner's internal metadata / system files
+        storage:
+          enabled: true
+          size: 5Gi
+          accessModes:
+            - ReadWriteOnce
+
+      # Mount the Pi's host Docker engine directly into the runner pod
+      extraVolumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket
+      extraContainerVolumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
