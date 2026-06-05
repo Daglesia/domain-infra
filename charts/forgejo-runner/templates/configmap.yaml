@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "forgejo-runner.name" . }}-config
+  namespace: forgejo-runner
+  labels:
+    {{- include "forgejo-runner.labels" . | nindent 4 }}
+data:
+  config.yml: |
+    log:
+      level: info
+
+    runner:
+      file: /data/.runner
+      capacity: {{ .Values.capacity }}
+      # Timeout for a single job
+      timeout: 3h
+      # Graceful shutdown timeout
+      shutdown_timeout: 10s
+      envs:
+        DOCKER_HOST: tcp://localhost:2376
+        DOCKER_TLS_VERIFY: "1"
+        DOCKER_CERT_PATH: /certs/client
+      # Only these volume paths can be mounted into job containers
+      valid_volumes:
+        - /certs/client
+      options: "-v /certs/client:/certs/client"
+
+    cache:
+      enabled: true
+      dir: /data/cache
+      # The address job containers will use to reach the cache server.
+      # Must be reachable from within DinD — use the pod IP or a Service.
+      host: ""      # leave empty: runner auto-detects pod IP
+      port: 0       # 0 = random free port
+
+    container:
+      network: host
+      # Privileged is false — DinD handles that separately
+      privileged: false
+      options:
+      valid_volumes:
+        - /certs/client

@@ -1,0 +1,46 @@
+forgejoInstanceUrl: "https://git.daglesia.com"
+runnerName: "k8s-runner"
+runnerLabels: "docker:docker://code.forgejo.org/oci/node:20-bookworm,ubuntu-latest:docker://code.forgejo.org/oci/ubuntu:22.04"
+
+image:
+  repository: data.forgejo.org/forgejo/runner
+  tag: "12.10.2"
+  pullPolicy: IfNotPresent
+
+dind:
+  image: docker:27-dind
+  pullPolicy: IfNotPresent
+capacity: 3
+existingSecret: "forgejo-runner-token"
+
+persistence:
+  enabled: true
+  storageClass: ""
+  size: 1Gi
+  accessMode: ReadWriteOnce
+
+resources:
+  runner:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
+  dind:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      memory: 2Gi
+
+nodeSelector: {}
+tolerations: []
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+              - dag-mini-pc
