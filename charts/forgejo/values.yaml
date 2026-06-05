@@ -55,7 +55,7 @@ forgejo:
 
   actions:
     enabled: true
-    existingSecret: "forgejo-runner-secret"
+    existingSecret: ""
     existingSecretKey: "token"
     token: ""
     provisioning:
