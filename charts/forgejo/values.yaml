@@ -91,8 +91,6 @@ forgejo:
       config:
         labels:
           - "ubuntu-latest:docker://node:20-bookworm"
-          - "ubuntu-22.04:docker://node:20-bookworm"
-          - "ubuntu-20.04:docker://node:20-focal"
           - "docker:docker://docker:24-cli"
         dind:
           enabled: false
