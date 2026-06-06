@@ -1,0 +1,62 @@
+# kubernetes-mcp-server helm values
+# Upstream chart: oci://ghcr.io/containers/charts/kubernetes-mcp-server
+
+replicaCount: 1
+
+image:
+  registry: quay.io
+  repository: containers/kubernetes_mcp_server
+  version: latest
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  annotations: {}
+  automountToken: true
+
+rbac:
+  create: true
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-issuer
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  host: mcp.daglesia.com
+  path: /kubernetes(/|$)(.*)
+  pathType: ImplementationSpecific
+  tls:
+    secretName: mcp-daglesia-tls
+
+# --port enables Streamable HTTP (path /mcp) and SSE (path /sse)
+extraArgs:
+  - --port=8080
+  # - --read-only
+  # - --toolsets=core,config,helm
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - dag-mini-pc   # replace with your target node
+
+config:
+  port: "8080"
