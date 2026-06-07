@@ -1,36 +1,57 @@
 authentik:
   authentik:
-    secret_key: "GENERATE_A_REAL_KEY_HERE" 
     error_reporting:
       enabled: false
   server:
-    ingress:
-      enabled: true
-      ingressClassName: "nginx"
-      hosts:
-        - "auth.daglesia.com"
-      paths:
-        - "/"
-      pathType: Prefix
-      tls:
-        - secretName: authentik-tls-cert
-          hosts:
-            - "auth.daglesia.com" 
     resources:
       requests:
         cpu: 100m
         memory: 512Mi
       limits:
         memory: 2Gi
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-issuer
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      hosts:
+        - auth.daglesia.com
+      paths:
+        - /
+      pathType: Prefix
+      tls:
+        - secretName: authentik-tls-cert
+          hosts:
+            - auth.daglesia.com
+  worker:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - dag-mini-pc
   postgresql:
     enabled: true
-    auth:
-      database: authentik
-      username: authentik
-      password: "use-a-secure-password-here"
-    persistence:
-      enabled: true
-      size: 8Gi
+    primary:
+      persistence:
+        enabled: true
+        size: 8Gi
+
   redis:
     enabled: true
     architecture: standalone
+    auth:
+      enabled: false
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - dag-mini-pc
