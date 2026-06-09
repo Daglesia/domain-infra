@@ -1,3 +1,6 @@
+constants:
+  host: auth.daglesia.com
+
 authentik:
   authentik:
     error_reporting:

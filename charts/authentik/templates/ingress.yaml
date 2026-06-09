@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: authentik-outpost-routes
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-issuer
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: auth.daglesia.com
+      http:
+        paths:
+          - path: /outpost.goauthentik.io/
+            pathType: Prefix
+            backend:
+              service:
+                name: ak-outpost-fixed
+                port:
+                  number: 9000
+  tls:
+    - secretName: authentik-tls-cert
+      hosts:
+        - auth.daglesia.com
