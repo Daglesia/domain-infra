@@ -6,9 +6,7 @@ metadata:
   labels:
     {{- include "forgejo-runner.labels" . | nindent 4 }}
 spec:
-  # Single replica — the runner handles concurrency internally via `capacity`
   replicas: 1
-  # Recreate avoids two runners fighting over the same PVC
   strategy:
     type: Recreate
   selector:
@@ -23,14 +21,8 @@ spec:
     spec:
       serviceAccountName: {{ include "forgejo-runner.name" . }}
       automountServiceAccountToken: false
-
-      # fsGroup ensures /data is writable by uid 1000 (runner user)
       securityContext:
         fsGroup: 1000
-
-      # ------------------------------------------------------------------ #
-      #  INIT CONTAINER — registers the runner exactly once                 #
-      # ------------------------------------------------------------------ #
       initContainers:
         - name: register
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -39,18 +31,14 @@ spec:
             - /bin/sh
             - -ec
             - |
-              # Skip registration if already done — idempotent across restarts
               if [ -f /data/.runner ]; then
                 echo "Runner already registered, skipping."
                 exit 0
               fi
-
-              # Fail fast if the volume isn't writable (catches fsGroup misconfiguration)
               if [ ! -w /data ]; then
                 echo "ERROR: /data is not writable. Check fsGroup / PVC permissions."
                 exit 1
               fi
-
               echo "Registering runner..."
               forgejo-runner register \
                 --no-interactive \
@@ -58,7 +46,6 @@ spec:
                 --token "$(RUNNER_TOKEN)" \
                 --name "$(RUNNER_NAME)" \
                 --labels "$(RUNNER_LABELS)"
-
               echo "Registration complete."
           env:
             - name: FORGEJO_INSTANCE_URL
@@ -75,13 +62,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
-
-      # ------------------------------------------------------------------ #
-      #  MAIN CONTAINERS                                                    #
-      # ------------------------------------------------------------------ #
       containers:
-
-        # ---- forgejo-runner -------------------------------------------- #
         - name: runner
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -91,18 +72,13 @@ spec:
             - --config
             - /etc/runner/config.yml
           env:
-            # These reach the DinD sidecar in the same pod via localhost
             - name: DOCKER_HOST
-              value: "tcp://localhost:2376"
-            - name: DOCKER_TLS_VERIFY
-              value: "1"
-            - name: DOCKER_CERT_PATH
-              value: /certs/client
+              value: "tcp://localhost:2375"
           resources:
             {{- toYaml .Values.resources.runner | nindent 12 }}
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: false   # runner writes tmp files
+            readOnlyRootFilesystem: false
             runAsNonRoot: true
             runAsUser: 1000
             capabilities:
@@ -113,34 +89,20 @@ spec:
             - name: config
               mountPath: /etc/runner
               readOnly: true
-            - name: dind-certs
-              mountPath: /certs
-              readOnly: true
-
-        # ---- docker-in-docker ------------------------------------------ #
         - name: dind
           image: {{ .Values.dind.image }}
           imagePullPolicy: {{ .Values.dind.pullPolicy }}
-          # DinD must be privileged — this is an unavoidable requirement
-          # until the native k8s runner executor lands
           securityContext:
             privileged: true
           env:
             - name: DOCKER_TLS_CERTDIR
-              value: /certs
+              value: ""
           resources:
             {{- toYaml .Values.resources.dind | nindent 12 }}
           volumeMounts:
-            - name: dind-certs
-              mountPath: /certs
             - name: dind-storage
               mountPath: /var/lib/docker
-
-      # ------------------------------------------------------------------ #
-      #  VOLUMES                                                            #
-      # ------------------------------------------------------------------ #
       volumes:
-        # Runner state (.runner file, cache)
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
@@ -148,22 +110,11 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
-
-        # config.yml from ConfigMap
         - name: config
           configMap:
             name: {{ include "forgejo-runner.name" . }}-config
-
-        # TLS certs shared between DinD and the runner
-        # emptyDir is ephemeral but that's fine — DinD regenerates certs on start
-        - name: dind-certs
-          emptyDir: {}
-
-        # Docker layer cache — emptyDir means layers are lost on pod restart
-        # Use a PVC here if your builds are slow and you want layer caching
         - name: dind-storage
           emptyDir: {}
-
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
