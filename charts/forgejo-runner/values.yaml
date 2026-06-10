@@ -10,6 +10,9 @@ image:
 dind:
   image: docker:27-dind
   pullPolicy: IfNotPresent
+  env:
+    - name: DOCKER_TLS_CERTDIR
+      value: ""
 capacity: 3
 existingSecret: "forgejo-runner-token"
 
