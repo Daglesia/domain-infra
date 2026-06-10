@@ -67,10 +67,15 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
-            - forgejo-runner
-            - daemon
-            - --config
-            - /etc/runner/config.yml
+            - /bin/sh
+            - -ec
+            - |
+              echo "Waiting for Docker daemon..."
+              until wget -qO- http://localhost:2375/_ping 2>/dev/null | grep -q OK; do
+                sleep 2
+              done
+              echo "Docker ready, starting runner."
+              exec forgejo-runner daemon --config /etc/runner/config.yml
           env:
             - name: DOCKER_HOST
               value: "tcp://localhost:2375"
@@ -94,9 +99,10 @@ spec:
           imagePullPolicy: {{ .Values.dind.pullPolicy }}
           securityContext:
             privileged: true
-          env:
-            - name: DOCKER_TLS_CERTDIR
-              value: ""
+          command: ["dockerd"]
+          args:
+            - --host=tcp://0.0.0.0:2375
+            - --host=unix:///var/run/docker.sock
           resources:
             {{- toYaml .Values.resources.dind | nindent 12 }}
           volumeMounts:
