@@ -30,6 +30,8 @@ forgejo:
         PATH: /data/lfs
       actions:
         ENABLED: true
+      packages:
+        ENABLED: true
   persistence:
     enabled: true
     create: false
