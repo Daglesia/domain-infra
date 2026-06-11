@@ -1,148 +1,213 @@
-replicaCount: 1
+nameOverride: ''
+fullnameOverride: ''
 
-image:
-  repository: git.daglesia.com/magdalena/flagship-website
-  pullPolicy: IfNotPresent
-  tag: "befe8f3ad0f80e73bcc68c7dfd1a58ee7d60a618"
+web:
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets: ''  # must be present in namespace
+  image:
+    repository: git.daglesia.com/magdalena/flagship-website
+    pullPolicy: IfNotPresent
+    tag: "befe8f3ad0f80e73bcc68c7dfd1a58ee7d60a618"
+  terminationGracePeriodSeconds: 0
+  replicaCount: 1
+  runtimeClassName:
+  # podAnnotations -- Additional annotations to add to the web Pod template (e.g., `secret.reloader.stakater.com/auto: "true"`).
+  podAnnotations: {}
+  # podLabels -- Additional labels to add to the web Pod template.
+  podLabels: {}
 
-imagePullSecrets: []
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
 
-serviceAccount:
-  create: true
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
-  # Annotations to add to the service account.
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template.
-  name: ""
+  # optional array of additional initcontainers
+  initContainers: []
+  # Example usage:
+    # initContainers:
+    # - name: init-mydb
+    #   image: busybox:1.36
+    #   command: ["/bin/sh"]
+    #   args: ["-c", "echo Setting up DB; sleep 5"]
+    #   volumeMounts:
+    #     - name: next-data
+    #       mountPath: /data
+    # - name: wait-for-service
+    #   image: busybox:1.36
+    #   command: ["/bin/sh"]
+    #   args: ["-c", "until nc -z some-service 5432; do sleep 3; done"]
 
-# This is for setting Kubernetes Annotations to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-podAnnotations: {}
-# This is for setting Kubernetes Labels to a Pod.
-# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-podLabels: {}
+  # optional array of additional containers
+  extraContainers: []
+  # Example usage:
+  # extraContainers:
+  #   - name: inngest-sync-sidecar
+  #     image: curlimages/curl:latest
+  #     command:
+  #       - /bin/sh
+  #       - -c
+  #       - |
+  #         echo "Sidecar waiting for Next.js readiness..."
+  #         # simple poll
+  #         for i in $(seq 1 30); do
+  #           if curl -fsS localhost:3000/api/health; then
+  #             echo "Next.js is ready, calling /api/inngest..."
+  #             curl -X PUT localhost:3000/api/inngest
+  #             echo "Sync done."
+  #             exit 0
+  #           fi
+  #           sleep 2
+  #         done
+  #         echo "Sidecar: Next.js never became ready, giving up."
+  #         exit 1
 
-podSecurityContext: {}
-  # fsGroup: 2000
+  # not sure about the usefulness of this - we are trying to solve some caching issues with next.js
+  # so this should be considered experimental.
+  cachePersistentVolume:
+    enabled: false  # If set to true, a PersistentVolumeClaim (PVC) will be created for caching
+    storageClass: ''  # The storage class to use for the PVC. If not set, the default StorageClass will be used
+    existingClaim: ''  # If set, this existing PVC will be used instead of creating a new one
+    accessModes:
+      - ReadWriteOnce  # The access modes for the PVC. Can be ReadWriteOnce, ReadOnlyMany, or ReadWriteMany. If cachePersistentVolume is enabled and replicaCount is more than 1, this should be set to ReadWriteMany
+    annotations: {}  # Annotations to add to the PVC
+    size: 1Gi  # The requested storage size for the PVC
+    volumeMode: ''  # The volume mode for the PVC. Can be either "Filesystem" (default) or "Block"
+    mountPath: /app/.next/cache  # The path to mount the volume in the container
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  dataVolume:
+    enabled: false  # If set to true, a PersistentVolumeClaim (PVC) will be created
+    storageClass: ''  # The storage class to use for the PVC. If not set, the default StorageClass will be used
+    existingClaim: ''  # If set, this existing PVC will be used instead of creating a new one
+    accessModes:
+      - ReadWriteOnce  # The access modes for the PVC. Can be ReadWriteOnce, ReadOnlyMany, or ReadWriteMany. If dataVolume is enabled and replicaCount is more than 1, this should be set to ReadWriteMany
+    annotations: {}  # Annotations to add to the PVC
+    size: 1Gi  # The requested storage size for the PVC
+    volumeMode: ''  # The volume mode for the PVC. Can be either "Filesystem" (default) or "Block"
+    mountPath: /app/data  # The path to mount the volume in the container
 
-# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
-service:
-  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-  type: ClusterIP
-  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 80
-  targetPort: 3000
+  hpa:
+    enabled: false
+    maxReplicas: 10
+    # average total CPU usage per pod (1-100)
+    cpu:
+    # average memory usage per pod (100Mi-1Gi)
+    memory:
+    # average http requests per second per pod (k8s-prometheus-adapter)
+    requests:
 
-ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-issuer
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-  hosts:
-    - host: daglesia.com
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: flagship-tls
-      hosts:
-        - daglesia.com
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-issuer
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: daglesia.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: flagship-tls
+        hosts:
+          - daglesia.com
 
-httpRoute:
-  # HTTPRoute enabled.
-  enabled: false
-  # HTTPRoute annotations.
-  annotations: {}
-  # Which Gateways this Route is attached to.
-  parentRefs:
-  - name: gateway
-    sectionName: http
-    # namespace: default
-  # Hostnames matching HTTP header.
-  hostnames:
-  - chart-example.local
-  # List of rules and filters applied.
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /headers
-  #   filters:
-  #   - type: RequestHeaderModifier
-  #     requestHeaderModifier:
-  #       set:
-  #       - name: My-Overwrite-Header
-  #         value: this-is-the-only-value
-  #       remove:
-  #       - User-Agent
-  # - matches:
-  #   - path:
-  #       type: PathPrefix
-  #       value: /echo
-  #     headers:
-  #     - name: version
-  #       value: v2
+  httpRoute:
+    # Enable Gateway API HTTPRoute.
+    enabled: false
+    # HTTPRoute annotations.
+    annotations: {}
+    # ParentRefs for HTTPRoute (required when enabled).
+    parentRefs: []
+    # Optional HTTPRoute hostnames.
+    hostnames: []
+    # Match rules for HTTPRoute.
+    matches:
+      - path:
+          type: PathPrefix
+          value: /
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-livenessProbe:
-  httpGet:
-    path: /
+  service:
+    enabled: true
+    type: ClusterIP
     port: 3000
-    initialDelaySeconds: 100
-    periodSeconds: 60
-readinessProbe:
-  httpGet:
-    path: /
-    port: 3000
-    initialDelaySeconds: 100
-    periodSeconds: 60
+    nodePort:
+    annotations: {}
 
-# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+  livenessProbe:
+    enabled: false
+    httpGet:
+      endpoint: /api/hc?source=livenessProbe
+      httpHeaders: []
+    initialDelaySeconds: 0
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 2
+    successThreshold: 1
+  readinessProbe:
+    enabled: false
+    httpGet:
+      endpoint: /api/hc?source=readinessProbe
+      httpHeaders: []
+    initialDelaySeconds: 0
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 2
+    successThreshold: 1
 
-# Additional volumes on the output Deployment definition.
-volumes: []
-  # - name: foo
-  #   secret:
-  #     secretName: mysecret
-  #     optional: false
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
-# Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
-  # - name: foo
-  #   mountPath: "/etc/foo"
-  #   readOnly: true
+  # env -- Non-secret env vars stored in the chart-managed ConfigMap.
+  # Merged on top of the default envs (AWS_SDK_CONFIG_OPT_OUT, NEXT_TELEMETRY_DISABLED).
+  # web.env:
+  #   NEXT_PUBLIC_API_BASE: https://api.example.com
+  env: {}
 
-nodeSelector: {}
+  # secretEnv -- Secret env vars stored in the chart-managed Secret.
+  # Keys are normalized to uppercase and '-' is replaced with '_' (same behavior as extraEnvs).
+  # web.secretEnv:
+  #   NEXTAUTH_SECRET: xxxx
+  secretEnv: {}
 
-tolerations: []
+  extraEnvs: []
+  # extraEnvs:
+  #   - name: AIRBROKE_GITHUB_ID
+  #     value: "xxxx"
+  #   - name: AIRBROKE_GITHUB_SECRET
+  #     value: "xxxxx"
+  #   - name: AIRBROKE_GITHUB_ORGS
+  #     value: "xxxxx"
+  #   - name: NEXTAUTH_SECRET
+  #     value: "xxxxxxx"
+  #   - name: NEXTAUTH_URL
+  #     value: "https://xxxxxx"
+  #   - name: AIRBROKE_OPENAI_API_KEY
+  #     value: "sk-xxxxxxx"
 
-affinity: {}
+  # optional list of envFrom refs to mount env vars from existing Secrets/ConfigMaps
+  # this is useful to keep secrets out of Helm values and avoid chart-managed Secret updates
+  # extraEnvFrom:
+  #   - secretRef:
+  #       name: my-app-env
+  #   - configMapRef:
+  #       name: my-app-config
+  extraEnvFrom: []
+
+  ## Pod Disruption Budget
+  ## https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  ##
+  podDisruptionBudget:
+    ## if a PodDisruptionBudget resource is created for the Deployment
+    ##
+    enabled: false
+
+    ## the maximum unavailable pods/percentage for the Deployment
+    ##
+    maxUnavailable:
+
+    ## the minimum available pods/percentage for the Deployment
+    ##
+    minAvailable:
