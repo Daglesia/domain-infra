@@ -105,7 +105,7 @@ web:
     hosts:
       - host: daglesia.com
         paths:
-          - path: /
+          - path: "/"
             pathType: Prefix
     tls:
       - secretName: flagship-tls
