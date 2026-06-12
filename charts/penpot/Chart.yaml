@@ -6,3 +6,9 @@ dependencies:
   - name: penpot
     repository: https://helm.penpot.app/
     version: 1.3.0
+  - name: postgresql
+    repository: oci://registry-1.docker.io/bitnamicharts
+    version: "~16.0.0"
+  - name: valkey
+    repository: https://valkey.io/valkey-helm/
+    version: "0.9.3"

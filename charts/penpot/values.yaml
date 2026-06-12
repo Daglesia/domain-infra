@@ -13,8 +13,8 @@ constants:
 
 penpot:
   global:
-    postgresqlEnabled: true
-    valkeyEnabled: true
+    postgresqlEnabled: false
+    valkeyEnabled: false
 
   persistence:
     assets:
@@ -27,7 +27,12 @@ penpot:
     flags: "enable-login enable-prepl-server disable-registration"
     telemetryEnabled: false
     postgresql:
+      host: "penpot-postgresql"
+      port: 5432
       database: "penpot"
+    redis:
+      host: "penpot-valkey"
+      port: 6379
 
   ingress:
     enabled: true
@@ -52,6 +57,33 @@ penpot:
               values:
                 - dag-mini-pc
 
-  postgresql:
-    auth:
-      database: "penpot"
+postgresql:
+  volumePermissions:
+    image:
+      registry: docker.io
+      repository: bitnamilegacy/os-shell
+      tag: "12-debian-12-r43"
+  primary:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                  - dag-mini-pc
+
+valkey:
+  architecture: standalone
+  auth:
+    enabled: false
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - dag-mini-pc
