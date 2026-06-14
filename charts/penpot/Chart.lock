@@ -4,9 +4,9 @@ dependencies:
   version: 1.3.0
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 15.5.3
+  version: 18.7.3
 - name: valkey
   repository: https://valkey.io/valkey-helm/
   version: 0.9.3
-digest: sha256:24e764d2bc5e9cef61f15e1f4f351f1028aa3700e745984c83776c740c088ecd
-generated: "2026-06-12T16:02:51.3209001+02:00"
+digest: sha256:b3f289cdc9332e6753bff9ad53145d98ef02337959130c239869ca2e54687c42
+generated: "2026-06-15T00:49:04.804033793+02:00"
