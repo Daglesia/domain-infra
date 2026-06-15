@@ -24,7 +24,7 @@ penpot:
 
   config:
     publicUri: "https://design.daglesia.com"
-    flags: "enable-login enable-prepl-server disable-registration"
+    flags: "enable-login enable-prepl-server enable-registration"
     telemetryEnabled: false
     postgresql:
       host: "penpot-postgresql"
