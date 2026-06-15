@@ -58,6 +58,8 @@ penpot:
                 - dag-mini-pc
 
 postgresql:
+  auth:
+    database: "penpot"
   volumePermissions:
     image:
       registry: docker.io
