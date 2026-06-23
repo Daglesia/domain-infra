@@ -156,7 +156,8 @@ web:
     successThreshold: 1
 
   resources: {}
-  nodeSelector: {}
+  nodeSelector:
+    kubernetes.io/arch: amd64
   tolerations: []
   affinity: {}
 
