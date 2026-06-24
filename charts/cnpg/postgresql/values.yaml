@@ -14,8 +14,8 @@
 constants:
   namespace: "data"
   clusterName: "shared-postgresql"
-  storage: "8Gi"
-  storageClass: "local-postgres-storage"
+  storage: "25Gi"
+  storageClass: "local-path"
   node_affinity_config:
     node_limit:
       matchExpressions:
