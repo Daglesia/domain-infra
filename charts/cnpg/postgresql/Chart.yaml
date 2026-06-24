@@ -1,0 +1,14 @@
+apiVersion: v2
+name: shared-postgresql
+description: >
+  Single, centrally-managed PostgreSQL instance for the cluster, provisioned
+  via the CloudNativePG operator. Replaces per-application embedded
+  PostgreSQL dependencies per ADR 26-06-15 (multiple-postgresql-instances).
+type: application
+version: 0.1.0
+appVersion: "16.4"
+keywords:
+  - postgresql
+  - cloudnative-pg
+  - database
+home: https://cloudnative-pg.io

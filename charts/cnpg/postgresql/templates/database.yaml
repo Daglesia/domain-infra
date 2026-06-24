@@ -1,0 +1,44 @@
+{{/*
+  One Secret + one CNPG `Database` per app that used to bundle its own
+  PostgreSQL. The Secret doubles as:
+    1. the passwordSecret for that app's declarative role (see cluster.yaml)
+    2. the connection-info Secret the app's own chart consumes (host/uri/etc)
+  Passwords come from secrets.yaml (sops-encrypted) via `.Values.databases_secret`,
+  never committed in plaintext.
+*/}}
+{{- range .Values.databases }}
+{{- $db := . }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $db.name }}-postgresql
+  namespace: {{ $.Values.constants.namespace }}
+  labels:
+    app.kubernetes.io/part-of: shared-postgresql
+  annotations:
+    # Mirrors this secret into the app's own namespace if you run
+    # kubernetes-reflector (https://github.com/emberstack/kubernetes-reflector).
+    # Drop these annotations if you'd rather copy credentials manually.
+    reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+type: Opaque
+stringData:
+  username: {{ $db.owner }}
+  password: {{ (index $.Values.databases_secret $db.name).password | quote }}
+  database: {{ $db.name }}
+  host: "{{ $.Values.constants.clusterName }}-rw.{{ $.Values.constants.namespace }}.svc.cluster.local"
+  port: "5432"
+  uri: "postgresql://{{ $db.owner }}:{{ (index $.Values.databases_secret $db.name).password }}@{{ $.Values.constants.clusterName }}-rw.{{ $.Values.constants.namespace }}.svc.cluster.local:5432/{{ $db.name }}"
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: {{ $db.name }}
+  namespace: {{ $.Values.constants.namespace }}
+spec:
+  name: {{ $db.name }}
+  owner: {{ $db.owner }}
+  cluster:
+    name: {{ $.Values.constants.clusterName }}
+{{- end }}

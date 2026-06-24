@@ -1,0 +1,53 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: {{ .Values.constants.clusterName }}
+  namespace: {{ .Values.constants.namespace }}
+  labels:
+    app.kubernetes.io/name: shared-postgresql
+    app.kubernetes.io/managed-by: Helm
+spec:
+  instances: {{ .Values.postgresql.instances }}
+  imageName: {{ .Values.postgresql.imageName }}
+
+  # Single shared superuser secret, sourced from sops-encrypted secrets.yaml.
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: {{ .Values.constants.clusterName }}-superuser
+
+  bootstrap:
+    initdb:
+      database: postgres
+      owner: postgres
+
+  # Declarative roles: one login role per application, password pulled from
+  # that app's own Secret (see templates/databases.yaml). This is what lets
+  # a single shared cluster hand out separate, least-privilege credentials
+  # to every app instead of everyone sharing the superuser.
+  managed:
+    roles:
+{{- range .Values.databases }}
+      - name: {{ .owner }}
+        ensure: present
+        login: true
+        passwordSecret:
+          name: {{ .name }}-postgresql
+{{- end }}
+
+  storage:
+    storageClass: {{ .Values.constants.storageClass }}
+    size: {{ .Values.constants.storage }}
+
+  affinity:
+    nodeAffinity:
+{{- toYaml .Values.postgresql.affinity.nodeAffinity | nindent 8 }}
+
+  resources:
+{{- toYaml .Values.postgresql.resources | nindent 4 }}
+
+  postgresql:
+    parameters:
+{{- toYaml .Values.postgresql.parameters | nindent 6 }}
+
+  monitoring:
+    enablePodMonitor: {{ .Values.postgresql.monitoring.enablePodMonitor }}

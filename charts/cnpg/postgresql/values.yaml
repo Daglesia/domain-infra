@@ -1,0 +1,100 @@
+# shared-postgresql values
+#
+# This chart assumes the CloudNativePG operator is ALREADY installed
+# cluster-wide (it is a singleton operator, shared by every chart in the
+# cluster — it should not be re-installed per application). Install it once
+# with e.g.:
+#   helm upgrade --install cnpg \
+#     --namespace cnpg-system --create-namespace \
+#     oci://ghcr.io/cloudnative-pg/charts/cloudnative-pg
+#
+# This chart only creates the *Cluster* (the actual Postgres instance) and
+# the per-application *Database* objects on top of it.
+
+constants:
+  namespace: "data"
+  clusterName: "shared-postgresql"
+  storage: "8Gi"
+  storageClass: "local-postgres-storage"
+  node_affinity_config:
+    node_limit:
+      matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - raspberka-ekran
+
+postgresql:
+  # Pinned, not "latest" — predictable upgrades on a small cluster.
+  imageName: "ghcr.io/cloudnative-pg/postgresql:16.4"
+
+  # Lightweight by design: a single instance instead of the usual 3-node
+  # CNPG HA topology. This trades automatic failover for a much smaller
+  # memory/CPU footprint, which is the explicit, accepted trade-off in the
+  # ADR ("single point of failure" is acceptable on this hardware).
+  instances: 1
+
+  # Keep CNPG's own footprint small too — no extra exporters/pollers unless
+  # actually needed.
+  monitoring:
+    enablePodMonitor: false
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+  # Postgres tuned for a small box, not the CNPG defaults (which assume a
+  # much bigger instance). These map straight onto postgresql.conf.
+  parameters:
+    max_connections: "50"
+    shared_buffers: "64MB"
+    effective_cache_size: "192MB"
+    maintenance_work_mem: "32MB"
+    wal_compression: "on"
+    log_min_duration_statement: "1000"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                  - raspberka-ekran
+
+# One entry per application that previously bundled its own PostgreSQL.
+# For each entry this chart creates:
+#   - a CNPG `Database` object (db + owning role inside the shared cluster)
+#   - a K8s Secret with that app's own credentials, for the app's chart to
+#     consume (see README for the cross-namespace caveat).
+# Passwords for these are NOT set here — they come from secrets.yaml
+# (sops-encrypted), keyed by app name under `databases.<name>.password`.
+databases:
+  - name: forgejo
+    owner: forgejo
+  - name: penpot
+    owner: penpot
+
+# Toggle on only if/when an app genuinely needs short-lived pooled
+# connections. Off by default to keep the footprint minimal.
+pooler:
+  enabled: false
+
+# --- Secrets ---------------------------------------------------------------
+# Real values for these two keys live in sops-encrypted secrets.yaml and get
+# merged in at install/template time (helm secrets, see README). They are
+# declared here, empty, only so `helm template`/`helm lint` don't fail on a
+# missing key when run without secrets.yaml.
+postgresql_superuser:
+  password: ""
+
+databases_secret:
+  forgejo:
+    password: ""
+  penpot:
+    password: ""

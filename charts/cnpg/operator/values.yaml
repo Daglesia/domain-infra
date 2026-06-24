@@ -1,0 +1,11 @@
+# Values for the upstream `cloudnative-pg` chart, passed through under
+# its subchart key (Helm convention: dependency name = values key).
+#
+# Deliberately minimal: the upstream defaults are already small
+# (requests: 100m CPU / 100Mi memory, limits: 100m CPU / 200Mi memory) and
+# this is a single, cluster-wide deployment shared by every Postgres
+# cluster — there is nothing meaningful left to shrink.
+cloudnative-pg:
+  replicaCount: 1
+  monitoring:
+    podMonitorEnabled: false

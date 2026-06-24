@@ -1,0 +1,24 @@
+{{- if .Values.pooler.enabled }}
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: {{ .Values.constants.clusterName }}-pooler
+  namespace: {{ .Values.constants.namespace }}
+spec:
+  cluster:
+    name: {{ .Values.constants.clusterName }}
+  instances: 1
+  type: rw
+  pgbouncer:
+    poolMode: transaction
+  template:
+    spec:
+      containers: []
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "32Mi"
+        limits:
+          cpu: "100m"
+          memory: "64Mi"
+{{- end }}
