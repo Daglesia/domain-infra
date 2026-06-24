@@ -30,6 +30,8 @@ spec:
       - name: {{ .owner }}
         ensure: present
         login: true
+        inherit: true
+        connectionLimit: -1
         passwordSecret:
           name: {{ .name }}-postgresql
 {{- end }}
