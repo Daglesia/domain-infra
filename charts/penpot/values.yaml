@@ -27,9 +27,10 @@ penpot:
     flags: "enable-login enable-prepl-server enable-registration"
     telemetryEnabled: false
     postgresql:
-      host: "penpot-postgresql"
+      host: "shared-postgresql-rw.data.svc.cluster.local"
       port: 5432
       database: "penpot"
+      username: "penpot"
     redis:
       host: "penpot-valkey"
       port: 6379
@@ -56,25 +57,6 @@ penpot:
               operator: In
               values:
                 - dag-mini-pc
-
-postgresql:
-  auth:
-    database: "penpot"
-  volumePermissions:
-    image:
-      registry: docker.io
-      repository: bitnamilegacy/os-shell
-      tag: "12-debian-12-r43"
-  primary:
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                  - dag-mini-pc
 
 valkey:
   architecture: standalone
