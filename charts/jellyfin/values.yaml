@@ -21,14 +21,14 @@ jellyfin:
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-issuer
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      # nginx.ingress.kubernetes.io/auth-url: "http://ak-outpost-fixed.default.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx"
-      # nginx.ingress.kubernetes.io/auth-signin: "https://auth.daglesia.com/outpost.goauthentik.io/start?rd=https://$host$escaped_request_uri"
-      # nginx.ingress.kubernetes.io/auth-response-headers: "Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid"
-      # nginx.ingress.kubernetes.io/proxy-add-original-uri-header: "true"
-      # nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
-      # nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
-      # nginx.ingress.kubernetes.io/proxy-buffers-size: "128k"
-      # nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "256k"
+      nginx.ingress.kubernetes.io/auth-url: "http://ak-outpost-fixed.default.svc.cluster.local:9000/outpost.goauthentik.io/auth/nginx"
+      nginx.ingress.kubernetes.io/auth-signin: "https://auth.daglesia.com/outpost.goauthentik.io/start?rd=https://$host$escaped_request_uri"
+      nginx.ingress.kubernetes.io/auth-response-headers: "Set-Cookie,X-authentik-username,X-authentik-groups,X-authentik-email,X-authentik-name,X-authentik-uid"
+      nginx.ingress.kubernetes.io/proxy-add-original-uri-header: "true"
+      nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+      nginx.ingress.kubernetes.io/proxy-buffers-number: "4"
+      nginx.ingress.kubernetes.io/proxy-buffers-size: "128k"
+      nginx.ingress.kubernetes.io/proxy-busy-buffers-size: "256k"
     hosts:
       - host: notflix.daglesia.com
         paths:
