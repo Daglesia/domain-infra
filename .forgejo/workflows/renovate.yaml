@@ -19,4 +19,5 @@ jobs:
           RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
           RENOVATE_REPOSITORIES: '["Magdalena/domain-infra"]'
           RENOVATE_GIT_AUTHOR: "Renovate Bot <magdalena@daglesia.com>"
-          LOG_LEVEL: debug
+          LOG_LEVEL: info
+          RENOVATE_BINARY_SOURCE: "global"
