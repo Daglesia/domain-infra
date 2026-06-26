@@ -17,6 +17,6 @@ jobs:
           RENOVATE_PLATFORM: forgejo
           RENOVATE_ENDPOINT: https://git.daglesia.com/api/v1
           RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
-          RENOVATE_REPOSITORIES: '["Daglesia/domain-infra"]'
+          RENOVATE_REPOSITORIES: '["Magdalena/domain-infra"]'
           RENOVATE_GIT_AUTHOR: "Renovate Bot <magdalena@daglesia.com>"
           LOG_LEVEL: debug
