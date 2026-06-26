@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "argocd": {
+    "managerFilePatterns": ["^apps/.+\\.ya?ml$"]
+  },
+  "github-actions": {
+    "managerFilePatterns": ["^\\.forgejo/workflows/.+\\.ya?ml$"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["^charts/argocd/Chart\\.yaml$"],
+      "matchStrings": [
+        "chart:\\s*(?<depName>\\S+)[\\s\\S]*?repo:\\s*(?<registryUrl>\\S+)[\\s\\S]*?version:\\s*(?<currentValue>\\S+)"
+      ],
+      "datasourceTemplate": "helm",
+      "versioningTemplate": "semver-coerced"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["helm-values"],
+      "matchFileNames": ["charts/flagship-website/**"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["helmv3", "argocd"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "groupName": "non-major chart updates"
+    }
+  ]
+}
