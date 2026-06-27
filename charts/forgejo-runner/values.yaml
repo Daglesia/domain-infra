@@ -8,7 +8,7 @@ image:
   pullPolicy: IfNotPresent
 
 dind:
-  image: docker:27-dind
+  image: docker:29-dind
   pullPolicy: IfNotPresent
 capacity: 3
 existingSecret: "forgejo-runner-token"
