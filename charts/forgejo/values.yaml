@@ -26,6 +26,8 @@ forgejo:
         LFS_START_SERVER: true
         LFS_HTTP_AUTH_EXPIRY: 30m
         LFS_MAX_FILE_SIZE: 0
+      service:
+        DISABLE_REGISTRATION: true
       lfs:
         PATH: /data/lfs
       actions:
