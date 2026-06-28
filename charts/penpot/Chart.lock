@@ -2,11 +2,8 @@ dependencies:
 - name: penpot
   repository: https://helm.penpot.app/
   version: 1.4.0
-- name: postgresql
-  repository: https://charts.bitnami.com/bitnami
-  version: 18.7.8
 - name: valkey
   repository: https://valkey.io/valkey-helm/
   version: 0.10.0
-digest: sha256:ab34be27c05c1b04384b253aba192fa9573eabebe7f6a1f323a9cb2c7a06f623
-generated: "2026-06-27T10:25:53.4764431+02:00"
+digest: sha256:53c99b70fe660816ab57c32f140202cbe4d00fe2a6af68714f61ae70fa2e795a
+generated: "2026-06-28T17:41:46.0668409+02:00"
