@@ -24,7 +24,7 @@ penpot:
 
   config:
     publicUri: "https://design.daglesia.com"
-    flags: "enable-login enable-prepl-server enable-registration"
+    flags: "enable-login enable-prepl-server enable-login-with-oidc disable-registration disable-login-with-password"
     telemetryEnabled: false
     postgresql:
       host: "shared-postgresql-rw.data.svc.cluster.local"
@@ -34,6 +34,11 @@ penpot:
     redis:
       host: "penpot-valkey"
       port: 6379
+    oidc:
+      enabled: true
+      clientId: "2Xx3SzAbpEqOcIvbBtTKsIDu1SxhqQkNqn0uLo3f"
+      baseUri: "https://auth.daglesia/application/o/penpot/"
+      scopes: "openid profile email"
 
   ingress:
     enabled: true
