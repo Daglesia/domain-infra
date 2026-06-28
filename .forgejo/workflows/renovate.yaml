@@ -9,7 +9,7 @@ jobs:
   renovate:
     runs-on: docker
     container:
-      image: renovate/renovate:41-full
+      image: renovate/renovate:43-full
     steps:
       - name: Run Renovate
         run: renovate
