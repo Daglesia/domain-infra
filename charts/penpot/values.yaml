@@ -34,11 +34,12 @@ penpot:
     redis:
       host: "penpot-valkey"
       port: 6379
-    oidc:
-      enabled: true
-      clientId: "2Xx3SzAbpEqOcIvbBtTKsIDu1SxhqQkNqn0uLo3f"
-      baseUri: "https://auth.daglesia/application/o/penpot/"
-      scopes: "openid profile email"
+    providers:
+      oidc:
+        enabled: true
+        clientID: "2Xx3SzAbpEqOcIvbBtTKsIDu1SxhqQkNqn0uLo3f"
+        baseURI: "https://auth.daglesia/application/o/penpot/"
+        scopes: "openid profile email"
 
   ingress:
     enabled: true
