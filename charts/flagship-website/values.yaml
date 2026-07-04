@@ -7,7 +7,7 @@ web:
   image:
     repository: git.daglesia.com/magdalena/flagship-website
     pullPolicy: IfNotPresent
-    tag: "befe8f3ad0f80e73bcc68c7dfd1a58ee7d60a618"
+    tag: "82483d8f2921513a80b0e60b4479d3509e3c0ecf"
   terminationGracePeriodSeconds: 0
   replicaCount: 1
   runtimeClassName:
@@ -161,11 +161,9 @@ web:
   tolerations: []
   affinity: {}
 
-  # env -- Non-secret env vars stored in the chart-managed ConfigMap.
-  # Merged on top of the default envs (AWS_SDK_CONFIG_OPT_OUT, NEXT_TELEMETRY_DISABLED).
-  # web.env:
-  #   NEXT_PUBLIC_API_BASE: https://api.example.com
-  env: {}
+  env:
+    AUTH_TRUST_HOST: "true"
+    AUTH_URL: "https://daglesia.com"
 
   # secretEnv -- Secret env vars stored in the chart-managed Secret.
   # Keys are normalized to uppercase and '-' is replaced with '_' (same behavior as extraEnvs).
