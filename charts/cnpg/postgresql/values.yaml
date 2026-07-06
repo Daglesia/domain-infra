@@ -76,4 +76,5 @@ databases:
     owner: wikijs
 
 pooler:
-  enabled: false
+  enabled: true
+  instances: 1

@@ -7,7 +7,7 @@ metadata:
 spec:
   cluster:
     name: {{ .Values.constants.clusterName }}
-  instances: 1
+  instances: {{ .Values.pooler.instances | default 1 }}
   type: rw
   pgbouncer:
     poolMode: transaction

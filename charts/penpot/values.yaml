@@ -27,7 +27,7 @@ penpot:
     flags: "enable-login enable-prepl-server enable-login-with-oidc disable-login-with-password disable-email-verification"
     telemetryEnabled: false
     postgresql:
-      host: "shared-postgresql-rw.data.svc.cluster.local"
+      host: "shared-postgresql-pooler.data.svc.cluster.local"
       port: 5432
       database: "penpot"
       username: "penpot"

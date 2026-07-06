@@ -13,7 +13,7 @@ wiki:
   postgresql:
     enabled: false
   externalPostgresql:
-    host: "shared-postgresql-rw.data.svc.cluster.local"
+    host: "shared-postgresql-pooler.data.svc.cluster.local"
     port: 5432
     database: "wikijs"
     username: "wikijs"

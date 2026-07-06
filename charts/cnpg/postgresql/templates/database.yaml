@@ -5,7 +5,16 @@
     2. the connection-info Secret the app's own chart consumes (host/uri/etc)
   Passwords come from secrets.yaml (sops-encrypted) via `.Values.databases_secret`,
   never committed in plaintext.
+
+  Connection host: routed through the CNPG pooler (pgbouncer, transaction
+  mode) when pooler.enabled is true, so apps don't consume a direct Postgres
+  backend connection per client connection. Falls back to the `-rw` service
+  directly if the pooler is disabled.
 */}}
+{{- $host := printf "%s-rw.%s.svc.cluster.local" .Values.constants.clusterName .Values.constants.namespace }}
+{{- if .Values.pooler.enabled }}
+{{- $host = printf "%s-pooler.%s.svc.cluster.local" .Values.constants.clusterName .Values.constants.namespace }}
+{{- end }}
 {{- range .Values.databases }}
 {{- $db := . }}
 ---
@@ -27,9 +36,9 @@ stringData:
   username: {{ $db.owner }}
   password: {{ (index $.Values.databases_secret $db.name).password | quote }}
   database: {{ $db.name }}
-  host: "{{ $.Values.constants.clusterName }}-rw.{{ $.Values.constants.namespace }}.svc.cluster.local"
+  host: {{ $host | quote }}
   port: "5432"
-  uri: "postgresql://{{ $db.owner }}:{{ (index $.Values.databases_secret $db.name).password }}@{{ $.Values.constants.clusterName }}-rw.{{ $.Values.constants.namespace }}.svc.cluster.local:5432/{{ $db.name }}"
+  uri: "postgresql://{{ $db.owner }}:{{ (index $.Values.databases_secret $db.name).password }}@{{ $host }}:5432/{{ $db.name }}"
 ---
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
