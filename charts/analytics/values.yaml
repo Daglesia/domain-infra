@@ -1,0 +1,142 @@
+constants:
+  grafanaHost: analytics.daglesia.com
+
+victoria-metrics-k8s-stack:
+  vmsingle:
+    enabled: true
+    spec:
+      retentionPeriod: "14d"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          memory: 768Mi
+      storage:
+        resources:
+          requests:
+            storage: 10Gi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - dag-mini-pc
+
+  vmcluster:
+    enabled: false
+
+  vmagent:
+    enabled: true
+    spec:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          memory: 256Mi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - dag-mini-pc
+
+  vmalert:
+    enabled: true
+    spec:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - dag-mini-pc
+
+  alertmanager:
+    enabled: true
+    spec:
+      resources:
+        requests:
+          cpu: 25m
+          memory: 32Mi
+        limits:
+          memory: 64Mi
+      configSecret: ""
+
+  defaultRules:
+    create: true
+
+  grafana:
+    enabled: true
+    persistence:
+      enabled: true
+      size: 1Gi
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-issuer
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      hosts:
+        - analytics.daglesia.com
+      tls:
+        - secretName: analytics-tls
+          hosts:
+            - analytics.daglesia.com
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - dag-mini-pc
+
+  kube-state-metrics:
+    enabled: true
+    resources:
+      requests:
+        cpu: 25m
+        memory: 32Mi
+      limits:
+        memory: 96Mi
+
+  prometheus-node-exporter:
+    enabled: true
+    resources:
+      requests:
+        cpu: 25m
+        memory: 16Mi
+      limits:
+        memory: 64Mi
+
+  vlsingle:
+    enabled: false
+  vlcluster:
+    enabled: false
+  vtsingle:
+    enabled: false
+  vtcluster:
+    enabled: false
