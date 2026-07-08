@@ -67,16 +67,16 @@ victoria-metrics-k8s-stack:
                     values:
                       - dag-mini-pc
 
-  alertmanager:
-    enabled: true
-    spec:
-      resources:
-        requests:
-          cpu: 25m
-          memory: 32Mi
-        limits:
-          memory: 64Mi
-      configSecret: ""
+  # alertmanager:
+  #   enabled: true
+  #   spec:
+  #     resources:
+  #       requests:
+  #         cpu: 25m
+  #         memory: 32Mi
+  #       limits:
+  #         memory: 64Mi
+  #     configSecret: ""
 
   defaultRules:
     create: true
