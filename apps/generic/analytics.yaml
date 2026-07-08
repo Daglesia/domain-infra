@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/Daglesia/domain-infra
-    path: charts/victoria-metrics
+    path: charts/analytics
     targetRevision: HEAD
     helm:
       valueFiles:
