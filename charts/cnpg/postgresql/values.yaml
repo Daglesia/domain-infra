@@ -22,7 +22,7 @@ constants:
         - key: kubernetes.io/hostname
           operator: In
           values:
-            - raspberka-ekran
+            - dag-mini-pc
 
 postgresql:
   # Pinned, not "latest" — predictable upgrades on a small cluster.
@@ -65,7 +65,7 @@ postgresql:
               - key: kubernetes.io/hostname
                 operator: In
                 values:
-                  - raspberka-ekran
+                  - dag-mini-pc
 
 databases:
   - name: forgejo
