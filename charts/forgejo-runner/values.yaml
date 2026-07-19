@@ -4,7 +4,7 @@ runnerLabels: "docker:docker://code.forgejo.org/oci/node:20-bookworm,ubuntu-late
 
 image:
   repository: data.forgejo.org/forgejo/runner
-  tag: "12.13.0"
+  tag: "12.13.1"
   pullPolicy: IfNotPresent
 
 dind:
