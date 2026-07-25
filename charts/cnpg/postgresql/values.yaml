@@ -74,6 +74,8 @@ databases:
     owner: penpot
   - name: wikijs
     owner: wikijs
+  - name: achievement_huntress
+    owner: achievement_huntress
 
 pooler:
   enabled: true

@@ -1,0 +1,73 @@
+nameOverride: ''
+fullnameOverride: ''
+
+web:
+  imagePullPolicy: IfNotPresent
+  image:
+    repository: git.daglesia.com/magdalena/achievement-huntress
+    tag: "latest"
+  replicaCount: 1
+  terminationGracePeriodSeconds: 0
+
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  service:
+    port: 3000
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-issuer
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: achievement-huntress.daglesia.com
+        paths:
+          - path: "/"
+            pathType: Prefix
+    tls:
+      - secretName: achievement-huntress-tls
+        hosts:
+          - achievement-huntress.daglesia.com
+
+  livenessProbe:
+    enabled: true
+    endpoint: /
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    enabled: true
+    endpoint: /
+    initialDelaySeconds: 5
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                  - dag-mini-pc
+
+  env:
+    NEXT_PUBLIC_BASE_URL: "https://achievement-huntress.daglesia.com"
+
+  secretEnv: {}
