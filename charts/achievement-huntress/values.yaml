@@ -68,6 +68,6 @@ web:
                   - dag-mini-pc
 
   env:
-    NEXT_PUBLIC_BASE_URL: "https://achievement-huntress.daglesia.com"
+    BASE_URL: "https://achievement-huntress.daglesia.com"
 
   secretEnv: {}
