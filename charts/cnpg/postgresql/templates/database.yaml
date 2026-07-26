@@ -1,34 +1,19 @@
-{{/*
-  One Secret + one CNPG `Database` per app that used to bundle its own
-  PostgreSQL. The Secret doubles as:
-    1. the passwordSecret for that app's declarative role (see cluster.yaml)
-    2. the connection-info Secret the app's own chart consumes (host/uri/etc)
-  Passwords come from secrets.yaml (sops-encrypted) via `.Values.databases_secret`,
-  never committed in plaintext.
-
-  Connection host: routed through the CNPG pooler (pgbouncer, transaction
-  mode) when pooler.enabled is true, so apps don't consume a direct Postgres
-  backend connection per client connection. Falls back to the `-rw` service
-  directly if the pooler is disabled.
-*/}}
 {{- $host := printf "%s-rw.%s.svc.cluster.local" .Values.constants.clusterName .Values.constants.namespace }}
 {{- if .Values.pooler.enabled }}
 {{- $host = printf "%s-pooler.%s.svc.cluster.local" .Values.constants.clusterName .Values.constants.namespace }}
 {{- end }}
 {{- range .Values.databases }}
 {{- $db := . }}
+{{- $slug := $db.name | replace "_" "-" }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ $db.name }}-postgresql
+  name: {{ $slug }}-postgresql
   namespace: {{ $.Values.constants.namespace }}
   labels:
     app.kubernetes.io/part-of: shared-postgresql
   annotations:
-    # Mirrors this secret into the app's own namespace if you run
-    # kubernetes-reflector (https://github.com/emberstack/kubernetes-reflector).
-    # Drop these annotations if you'd rather copy credentials manually.
     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
 type: Opaque
@@ -43,7 +28,7 @@ stringData:
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
 metadata:
-  name: {{ $db.name }}
+  name: {{ $slug }}
   namespace: {{ $.Values.constants.namespace }}
 spec:
   name: {{ $db.name }}

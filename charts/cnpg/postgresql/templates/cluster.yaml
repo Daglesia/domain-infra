@@ -33,7 +33,7 @@ spec:
         inherit: true
         connectionLimit: -1
         passwordSecret:
-          name: {{ .name }}-postgresql
+          name: {{ .name | replace "_" "-" }}-postgresql
 {{- end }}
 
   storage:
