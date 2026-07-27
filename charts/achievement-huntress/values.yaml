@@ -5,7 +5,7 @@ web:
   imagePullPolicy: IfNotPresent
   image:
     repository: git.daglesia.com/magdalena/achievement-huntress
-    tag: "70a84abad4baa2007cff9edfca2c0580bae3f2ec"
+    tag: "5bb72f07a8d9394661be337fda657f6c2f37f40e"
   replicaCount: 1
   terminationGracePeriodSeconds: 0
 
