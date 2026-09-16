@@ -76,6 +76,8 @@ databases:
     owner: wikijs
   - name: achievement_huntress
     owner: achievement_huntress
+  - name: n8n
+    owner: n8n
 
 pooler:
   enabled: true

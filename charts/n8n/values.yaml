@@ -1,0 +1,62 @@
+constants:
+  storage: "5Gi"
+  pvc: "n8n-data-pvc"
+  pv: "n8n-data-pv"
+
+n8n:
+  image:
+    repository: n8nio/n8n
+    tag: "2.39.4"
+
+  ingress:
+    enabled: true
+    className: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-issuer
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: automation.daglesia.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: n8n-tls
+        hosts:
+          - automation.daglesia.com
+
+  main:
+    config:
+      database:
+        type: postgresdb
+        postgresdb:
+          host: shared-postgresql-pooler.data.svc.cluster.local
+          port: 5432
+          database: n8n
+          user: n8n
+      host: automation.daglesia.com
+      port: 443
+      protocol: https
+
+    persistence:
+      enabled: true
+      existingClaim: n8n-data-pvc
+      accessModes:
+        - ReadWriteOnce
+      size: 5Gi
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        memory: 512Mi
+
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                    - dag-mini-pc
