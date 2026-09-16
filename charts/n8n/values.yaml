@@ -46,10 +46,10 @@ n8n:
 
     resources:
       requests:
-        cpu: 100m
+        cpu: 200m
         memory: 256Mi
       limits:
-        memory: 512Mi
+        memory: 4012Mi
 
     affinity:
       nodeAffinity:
