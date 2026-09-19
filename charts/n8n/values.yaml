@@ -25,6 +25,13 @@ n8n:
           - automation.daglesia.com
 
   main:
+    extraEnv:
+      WEBHOOK_URL:
+        value: "https://automation.daglesia.com/"
+      N8N_EDITOR_BASE_URL:
+        value: "https://automation.daglesia.com/"
+      N8N_PROXY_HOPS:
+        value: "1"
     config:
       database:
         type: postgresdb
