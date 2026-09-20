@@ -2,6 +2,15 @@ constants:
   storage: "5Gi"
   pvc: "n8n-data-pvc"
   pv: "n8n-data-pv"
+  storageClass: "n8n-data-sc"
+  path: "/n8n"
+  node_affinity_config:
+    node_limit:
+      matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+            - dag-mini-pc
 
 n8n:
   image:
@@ -32,20 +41,23 @@ n8n:
         value: "https://automation.daglesia.com/"
       N8N_PROXY_HOPS:
         value: "1"
+      N8N_HOST:
+        value: "automation.daglesia.com"
+      N8N_PROTOCOL:
+        value: "https"
+
     config:
-      database:
+      db:
         type: postgresdb
         postgresdb:
           host: shared-postgresql-pooler.data.svc.cluster.local
           port: 5432
           database: n8n
           user: n8n
-      host: automation.daglesia.com
-      port: 443
-      protocol: https
 
     persistence:
       enabled: true
+      type: existing
       existingClaim: n8n-data-pvc
       accessModes:
         - ReadWriteOnce
