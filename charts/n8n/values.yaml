@@ -15,7 +15,7 @@ constants:
 n8n:
   image:
     repository: n8nio/n8n
-    tag: "2.40.3"
+    tag: "2.40.5"
 
   ingress:
     enabled: true
