@@ -1,0 +1,6 @@
+apiVersion: v2
+name: grist
+description: Self-hosted Grist (relational spreadsheet), no upstream chart available
+type: application
+version: 0.1.0
+appVersion: "latest"

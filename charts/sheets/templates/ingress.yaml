@@ -1,0 +1,58 @@
+{{- if .Values.grist.ingress.enabled }}
+{{- $name := include "grist.name" . }}
+{{- $port := .Values.grist.service.port }}
+{{- $host := .Values.grist.ingress.host }}
+# Main ingress: whole site, no nginx-level auth (Grist enforces login itself,
+# which keeps Bearer-token API access working).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $name }}
+  labels:
+    {{- include "grist.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.grist.ingress.annotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.grist.ingress.className }}
+  tls:
+    - hosts:
+        - {{ $host | quote }}
+      secretName: {{ .Values.grist.ingress.tlsSecret }}
+  rules:
+    - host: {{ $host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $name }}
+                port:
+                  number: {{ $port }}
+---
+# Login ingress: only the forward-auth login path(s), protected by the Authentik outpost.
+# More specific paths win over "/" in ingress-nginx.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $name }}-login
+  labels:
+    {{- include "grist.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.grist.ingress.loginAnnotations | nindent 4 }}
+spec:
+  ingressClassName: {{ .Values.grist.ingress.className }}
+  rules:
+    - host: {{ $host | quote }}
+      http:
+        paths:
+          {{- range .Values.grist.ingress.loginPaths }}
+          - path: {{ . }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $name }}
+                port:
+                  number: {{ $port }}
+          {{- end }}
+{{- end }}

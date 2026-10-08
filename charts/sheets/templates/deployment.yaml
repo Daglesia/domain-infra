@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "grist.name" . }}
+  labels:
+    {{- include "grist.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  # RWO local volume + SQLite documents: never run two pods at once.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "grist.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "grist.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+    spec:
+      containers:
+        - name: {{ include "grist.name" . }}
+          image: "{{ .Values.grist.image.repository }}:{{ .Values.grist.image.tag }}"
+          imagePullPolicy: {{ .Values.grist.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: {{ .Values.grist.service.port | quote }}
+            {{- range $k, $v := .Values.grist.env }}
+            - name: {{ $k }}
+              value: {{ $v | toString | quote }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: {{ include "grist.name" . }}-env
+          ports:
+            - name: http
+              containerPort: {{ .Values.grist.service.port }}
+              protocol: TCP
+          {{- if .Values.grist.livenessProbe.enabled }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.grist.livenessProbe.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.grist.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.grist.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.grist.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.grist.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.grist.readinessProbe.enabled }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.grist.readinessProbe.path }}
+              port: http
+            initialDelaySeconds: {{ .Values.grist.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.grist.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.grist.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.grist.readinessProbe.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.grist.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /persist
+      {{- with .Values.grist.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Values.constants.pvc }}
