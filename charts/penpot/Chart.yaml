@@ -5,7 +5,7 @@ version: 0.1.0
 dependencies:
   - name: penpot
     repository: https://helm.penpot.app/
-    version: 1.11.1
+    version: 1.11.3
   - name: valkey
     repository: https://valkey.io/valkey-helm/
     version: "0.12.0"
