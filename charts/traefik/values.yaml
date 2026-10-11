@@ -1,0 +1,23 @@
+traefik:
+  ingressClass:
+    enabled: false              # don't create a "traefik" IngressClass; we own "nginx"
+
+  providers:
+    kubernetesIngress:
+      enabled: false            # avoid duplicate routers
+    kubernetesIngressNginx:
+      enabled: true
+      ingressClass: nginx
+      controllerClass: k8s.io/ingress-nginx
+    kubernetesGateway:
+      enabled: false            # turned on in phase 2, after the CRDs exist
+
+  service:
+    type: ClusterIP             # TEMPORARY for testing; flipped to LoadBalancer at cutover
+
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits:   { memory: 192Mi }
+
+  nodeSelector:
+    kubernetes.io/hostname: dag-mini-pc
