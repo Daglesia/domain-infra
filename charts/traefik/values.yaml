@@ -32,7 +32,7 @@ traefik:
 
     # PHASE 2: set true once the Gateway API CRDs are installed.
     kubernetesGateway:
-      enabled: false
+      enabled: true
 
   # The chart's own default Gateway: we define our own (templates/gateway.yaml).
   # Leave off in both phases.
@@ -42,7 +42,7 @@ traefik:
   # PHASE 2: set true together with kubernetesGateway.enabled
   # (creates the "traefik" GatewayClass; needs the CRDs).
   gatewayClass:
-    enabled: false
+    enabled: true
 
   service:
     # Phase 1 testing: ClusterIP (doesn't touch ports 80/443).
