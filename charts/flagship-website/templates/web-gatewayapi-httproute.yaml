@@ -25,6 +25,9 @@ spec:
     - matches:
         {{- toYaml .Values.web.httpRoute.matches | nindent 8 }}
       backendRefs:
-        - name: {{ $fullName }}
+        - group: ""
+          kind: Service
+          name: {{ $fullName }}
           port: {{ $svcPort }}
+          weight: 1
 {{- end }}

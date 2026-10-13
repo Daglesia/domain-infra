@@ -102,11 +102,17 @@ web:
   httpRoute:
     enabled: true
     parentRefs:
-      - name: main
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        name: main
         namespace: traefik
         sectionName: https-daglesia-com
     hostnames:
       - daglesia.com
+    matches:
+      - path:
+          type: PathPrefix
+          value: /
 
   service:
     enabled: true
