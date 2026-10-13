@@ -2,9 +2,9 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: {{ .Values.gateway.name }}
+  name: {{ required "gateway.name is required" .Values.gateway.name }}
   annotations:
-    cert-manager.io/cluster-issuer: {{ .Values.gateway.clusterIssuer }}
+    cert-manager.io/cluster-issuer: {{ required "gateway.clusterIssuer is required" .Values.gateway.clusterIssuer | quote }}
 spec:
   gatewayClassName: traefik
   listeners:

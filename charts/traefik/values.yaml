@@ -1,5 +1,7 @@
 gateway:
   enabled: true
+  name: main
+  clusterIssuer: letsencrypt-issuer
   hosts:
     - daglesia.com
     - git.daglesia.com
