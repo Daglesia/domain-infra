@@ -1,5 +1,5 @@
 gateway:
-  enabled: false            # PHASE 2: set true after Gateway API CRDs are installed
+  enabled: true
   hosts:
     - daglesia.com
     - git.daglesia.com
@@ -12,42 +12,29 @@ gateway:
     - achievement-huntress.daglesia.com
 
 traefik:
-  # We create the "nginx" IngressClass ourselves (templates/ingressclass.yaml),
-  # so don't let the chart create a "traefik" one.
   ingressClass:
     enabled: false
 
   providers:
-    # Plain Ingress provider off: the NGINX provider below handles Ingresses,
-    # and having both would create duplicate routers.
     kubernetesIngress:
       enabled: false
 
-    # Reads existing Ingresses + nginx.ingress.kubernetes.io/* annotations.
-    # NOTE: capital "NGINX" on chart v40+.
     kubernetesIngressNGINX:
       enabled: true
       ingressClass: nginx
       controllerClass: k8s.io/ingress-nginx
 
-    # PHASE 2: set true once the Gateway API CRDs are installed.
     kubernetesGateway:
       enabled: true
 
-  # The chart's own default Gateway: we define our own (templates/gateway.yaml).
-  # Leave off in both phases.
   gateway:
     enabled: false
 
-  # PHASE 2: set true together with kubernetesGateway.enabled
-  # (creates the "traefik" GatewayClass; needs the CRDs).
   gatewayClass:
     enabled: true
 
   service:
-    # Phase 1 testing: ClusterIP (doesn't touch ports 80/443).
-    # CUTOVER: change to LoadBalancer after ingress-nginx is deleted.
-    type: ClusterIP
+    type: LoadBalancer
 
   resources:
     requests:
