@@ -1,0 +1,31 @@
+{{- if .Values.gateway.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.name }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.gateway.clusterIssuer }}
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: http
+      port: 8000
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: All
+    {{- range .Values.gateway.hosts }}
+    - name: https-{{ . | replace "." "-" }}
+      hostname: {{ . | quote }}
+      port: 8443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: {{ . | replace "." "-" }}-gateway-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    {{- end }}
+{{- end }}

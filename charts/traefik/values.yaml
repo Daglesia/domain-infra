@@ -10,6 +10,7 @@ gateway:
     - automation.daglesia.com
     - analytics.daglesia.com
     - achievement-huntress.daglesia.com
+    - sheets.daglesia.com
 
 traefik:
   ingressClass:

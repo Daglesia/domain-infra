@@ -97,35 +97,16 @@ web:
     requests:
 
   ingress:
-    enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-issuer
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    hosts:
-      - host: daglesia.com
-        paths:
-          - path: "/"
-            pathType: Prefix
-    tls:
-      - secretName: flagship-tls
-        hosts:
-          - daglesia.com
+    enabled: false
 
   httpRoute:
-    # Enable Gateway API HTTPRoute.
-    enabled: false
-    # HTTPRoute annotations.
-    annotations: {}
-    # ParentRefs for HTTPRoute (required when enabled).
-    parentRefs: []
-    # Optional HTTPRoute hostnames.
-    hostnames: []
-    # Match rules for HTTPRoute.
-    matches:
-      - path:
-          type: PathPrefix
-          value: /
+    enabled: true
+    parentRefs:
+      - name: main
+        namespace: traefik
+        sectionName: https-daglesia-com
+    hostnames:
+      - daglesia.com
 
   service:
     enabled: true
