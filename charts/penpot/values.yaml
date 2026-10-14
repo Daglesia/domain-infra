@@ -11,6 +11,11 @@ constants:
           values:
             - dag-mini-pc
 
+httpRoute:
+  enabled: true
+  hostname: design.daglesia.com
+  service: { name: penpot, port: 8080 }
+
 penpot:
   global:
     postgresqlEnabled: false
@@ -44,18 +49,7 @@ penpot:
         roles: "admins"
 
   ingress:
-    enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-issuer
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/proxy-body-size: "100m"
-    hosts:
-      - design.daglesia.com
-    tls:
-      - secretName: penpot-tls
-        hosts:
-          - design.daglesia.com
+    enabled: false
 
   affinity:
     nodeAffinity:

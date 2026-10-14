@@ -12,26 +12,18 @@ constants:
           values:
             - dag-mini-pc
 
+httpRoute:
+  enabled: true
+  hostname: automation.daglesia.com
+  service: { name: n8n, port: 80 }
+
 n8n:
   image:
     repository: n8nio/n8n
     tag: "2.43.3"
 
   ingress:
-    enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-issuer
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    hosts:
-      - host: automation.daglesia.com
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: n8n-tls
-        hosts:
-          - automation.daglesia.com
+    enabled: false
 
   main:
     extraEnv:

@@ -10,6 +10,11 @@ constants:
           values:
             - raspberka-ekran
 
+httpRoute:
+  enabled: true
+  hostname: git.daglesia.com
+  service: { name: forgejo-http, port: 3000 }
+
 forgejo:
   affinity:
     nodeAffinity:
@@ -41,18 +46,4 @@ forgejo:
     volumeName: forgejo-git-pv
     storageClass: local-git-storage
   ingress:
-    enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-issuer
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/proxy-body-size: "500m"
-    hosts:
-      - host: git.daglesia.com
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: forgejo-tls
-        hosts:
-          - git.daglesia.com
+    enabled: false

@@ -9,6 +9,12 @@ constants:
           operator: In
           values:
             - dag-mini-pc
+
+httpRoute:
+  enabled: true
+  hostname: docs.daglesia.com
+  service: { name: wikijs, port: 80 }
+
 wiki:
   postgresql:
     enabled: false
@@ -22,29 +28,3 @@ wiki:
     ssl: false
   ingress:
     enabled: false
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-issuer
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    hosts:
-      - host: docs.daglesia.com
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - secretName: wikijs-tls
-        hosts:
-          - docs.daglesia.com
-  persistence:
-    enabled: true
-    size: "10Gi"
-    existingClaim: "wiki-docs-pvc"
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                  - dag-mini-pc
