@@ -13,20 +13,7 @@ authentik:
       limits:
         memory: 2Gi
     ingress:
-      enabled: true
-      ingressClassName: nginx
-      annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-issuer
-        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      hosts:
-        - auth.daglesia.com
-      paths:
-        - /
-      pathType: Prefix
-      tls:
-        - secretName: authentik-tls-cert
-          hosts:
-            - auth.daglesia.com
+      enabled: false
   worker:
     affinity:
       nodeAffinity:
