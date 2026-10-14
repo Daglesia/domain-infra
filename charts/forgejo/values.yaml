@@ -28,6 +28,9 @@ forgejo:
   gitea:
     config:
       server:
+        DOMAIN: git.daglesia.com
+        ROOT_URL: https://git.daglesia.com/
+        SSH_DOMAIN: git.daglesia.com
         LFS_START_SERVER: true
         LFS_HTTP_AUTH_EXPIRY: 30m
         LFS_MAX_FILE_SIZE: 0
