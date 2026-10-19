@@ -37,6 +37,8 @@ n8n:
         value: "automation.daglesia.com"
       N8N_PROTOCOL:
         value: "https"
+      NODE_FUNCTION_ALLOW_BUILTIN:
+        value: "crypto"
 
     config:
       db:
