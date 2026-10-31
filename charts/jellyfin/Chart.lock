@@ -1,6 +1,6 @@
 dependencies:
 - name: jellyfin
   repository: https://jellyfin.github.io/jellyfin-helm
-  version: 3.4.0
-digest: sha256:6d899df426e29e9ec7ca7001db06dda970ecad56b2beea61f3a72e5d463686f7
-generated: "2026-10-20T02:01:34.340937657Z"
+  version: 3.7.0
+digest: sha256:42d1d31b61f45653f95c5ed12dec02cdb68db5ddb6ccafbcac35354977374253
+generated: "2026-10-31T10:56:21.08393633Z"

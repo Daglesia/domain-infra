@@ -1,9 +1,9 @@
 dependencies:
 - name: penpot
   repository: https://helm.penpot.app/
-  version: 1.11.3
+  version: 1.11.5
 - name: valkey
   repository: https://valkey.io/valkey-helm/
-  version: 0.12.0
-digest: sha256:9bad58499ce4082c2ec434e2b3aced77308d8537abe92a7de31621e9af846852
-generated: "2026-10-08T02:01:47.696455803Z"
+  version: 0.12.1
+digest: sha256:942a18e723577d2184ff1bf5c625a9523f0ab302fceb9477c13f097c8ff3de48
+generated: "2026-10-31T10:56:28.274755372Z"
