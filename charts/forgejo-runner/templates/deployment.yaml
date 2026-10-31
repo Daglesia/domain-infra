@@ -71,14 +71,14 @@ spec:
             - -ec
             - |
               echo "Waiting for Docker daemon..."
-              until wget -qO- http://localhost:2375/_ping 2>/dev/null | grep -q OK; do
+              until wget -qO- http://127.0.0.1:2375/_ping 2>/dev/null | grep -q OK; do
                 sleep 2
               done
               echo "Docker ready, starting runner."
               exec forgejo-runner daemon --config /etc/runner/config.yml
           env:
             - name: DOCKER_HOST
-              value: "tcp://localhost:2375"
+              value: "tcp://127.0.0.1:2375"
           resources:
             {{- toYaml .Values.resources.runner | nindent 12 }}
           securityContext:

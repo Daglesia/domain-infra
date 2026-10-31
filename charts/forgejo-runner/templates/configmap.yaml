@@ -18,7 +18,7 @@ data:
       # Graceful shutdown timeout
       shutdown_timeout: 10s
       envs:
-        DOCKER_HOST: tcp://localhost:2375
+        DOCKER_HOST: tcp://127.0.0.1:2375
     cache:
       enabled: true
       dir: /data/cache
