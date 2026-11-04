@@ -20,7 +20,7 @@ httpRoute:
 n8n:
   image:
     repository: n8nio/n8n
-    tag: "3.0.1"
+    tag: "3.1.0"
 
   ingress:
     enabled: false
