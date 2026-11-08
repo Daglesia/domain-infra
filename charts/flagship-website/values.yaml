@@ -7,7 +7,7 @@ web:
   image:
     repository: git.daglesia.com/magdalena/flagship-website
     pullPolicy: IfNotPresent
-    tag: "7b887cef269120bd05f8d115b4edee42448978bb"
+    tag: "eed9e26e4e5913f15679105aa27623e270d31a14"
   terminationGracePeriodSeconds: 0
   replicaCount: 1
   runtimeClassName:
