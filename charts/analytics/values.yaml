@@ -4,6 +4,7 @@ httpRoute:
   service: { name: victoria-metrics-grafana, port: 80 }
 
 victoria-metrics-k8s-stack:
+  fullnameOverride: "metrics"
   vmsingle:
     enabled: true
     spec:
