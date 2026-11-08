@@ -1,5 +1,7 @@
-constants:
-  grafanaHost: analytics.daglesia.com
+httpRoute:
+  enabled: true
+  hostname: analytics.daglesia.com
+  service: { name: victoria-metrics-grafana, port: 80 }
 
 victoria-metrics-k8s-stack:
   vmsingle:
@@ -93,17 +95,10 @@ victoria-metrics-k8s-stack:
       limits:
         memory: 256Mi
     ingress:
-      enabled: true
-      ingressClassName: nginx
-      annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-issuer
-        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      hosts:
-        - analytics.daglesia.com
-      tls:
-        - secretName: analytics-tls
-          hosts:
-            - analytics.daglesia.com
+      enabled: false
+    grafana.ini:
+      server:
+        root_url: https://analytics.daglesia.com
     affinity:
       nodeAffinity:
         requiredDuringSchedulingIgnoredDuringExecution:
